@@ -143,3 +143,22 @@ form input {
 .songList > div:nth-child(3) {
     
 }
+
+
+.buy {
+        position: relative;
+        /* left: 56px; */
+        bottom: -27px;
+        left: 2px;
+    
+        margin-top: 38px;
+        /* margin-left: 105px; */
+        width: 140px;
+        height: 49.6px;
+        background: #944949 0% 0% no-repeat padding-box;
+        box-shadow: 2px 3px 6px #00000029;
+        border-radius: 52px;
+        opacity: 1;
+        color: white;
+        font-size: 20px;
+}

@@ -152,10 +152,13 @@ function MyMusicList() {
         <article>
             <section>
                 <div className="container">
-                    <div>
+                    <div className="tokenInfo">
+                        <div className="tokenImage">
                         <img src={SelectedImage} alt={SelectedImage} width="200"></img>
-                        <p>
-                            Token Amount - {SelectedAmount}
+                        </div>
+                        <div className="metadata">
+                           <p>
+                           Token Amount - {SelectedAmount}
                             <br />
                             Title - {SelectedTitle}
                             <br />
@@ -169,7 +172,13 @@ function MyMusicList() {
                             <br />
                             ExternalURL - {SelectedExternalURL}
                             <br />
-                            <button onClick={() => {
+                           </p>
+                            
+                        </div>
+
+                       
+                        <div className="buttons">
+                        <button className="sell" onClick={() => {
                                 if (SellButtonText === "Sell")
                                     clickSellButton();
                                 else if (SellButtonText === "Approve")
@@ -177,17 +186,23 @@ function MyMusicList() {
                                 else if (SellButtonText === "Add on tradeblock")
                                     clickAddOnTradeblock();
                             }}>{SellButtonText}</button>
-                            <input type="number" onChange={putPrice} style={{visibility: IsInputVisible}} placeholder="Set price"></input>
-                        </p>
+                            <input className="priceInput" type="number" onChange={putPrice} style={{visibility: IsInputVisible}} placeholder="Set price"></input>
+                        </div>
                     </div>
+
+                    
                     <div>
+                        <div className="tokenInfo">
+                        <div className="MTs">
                         {
                             TokenIDs.map((res, index) => (
                                 <div key={index}>
-                                    <button onClick={() => putSongInfo(index)}>{Artists[index]} - {Titles[index]}</button>
+                                    <button  style={{ marginBottom: "10px" }}onClick={() => putSongInfo(index)}>{Artists[index]} - {Titles[index]}</button>
                                 </div>
                             ))
                         }
+                        </div>
+                        </div>
                     </div>
                 </div>
             </section>
