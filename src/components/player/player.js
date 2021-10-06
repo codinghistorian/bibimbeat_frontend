@@ -1,13 +1,12 @@
-import React, {useState, useRef, useEffect} from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import styles from "./audioPlayer.module.css"
-import {FaStepForward} from "react-icons/fa"
-import {FaStepBackward} from "react-icons/fa"
-import {FaPlay} from "react-icons/fa"
-import {FaPause} from "react-icons/fa"
-import {FaRandom} from "react-icons/fa"
-import {ImLoop} from "react-icons/im"
-import {MdPlaylistPlay} from "react-icons/md"
-
+import { FaStepForward } from "react-icons/fa"
+import { FaStepBackward } from "react-icons/fa"
+import { FaPlay } from "react-icons/fa"
+import { FaPause } from "react-icons/fa"
+import { FaRandom } from "react-icons/fa"
+import { ImLoop } from "react-icons/im"
+import { MdPlaylistPlay } from "react-icons/md"
 
 function Player() {
 
@@ -18,7 +17,7 @@ function Player() {
     // references
     const audioPlayer = useRef();
     const progressBar = useRef(); //ref to progressBar
-    const animationRef =useRef(); //ref the animation
+    const animationRef = useRef(); //ref the animation
 
     useEffect(() => {
         const seconds = Math.floor(audioPlayer.current.duration);
