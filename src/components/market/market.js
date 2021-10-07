@@ -30,7 +30,7 @@ function Market() {
     const [SelectedPrice, setSelectedPrice] = useState();
     const [SelectedTradeCounter, setSelectedTradeCounter] = useState();
 
-    const [OpenTradeCounterLength, setOpenTradeCounterLength] = useState();
+    const [OpenTradeCounters, setOpenTradeCounters] = useState([]);
 
     const [BuyButtonText, setBuyButtonText] = useState("Buy");
 
@@ -43,7 +43,8 @@ function Market() {
         setSelectedDescription(Descriptions[i]);
         setSelectedExternalURL(ExternalURLs[i]);
         setSelectedImage(Images[i]);
-        setSelectedTradeCounter(TradeCounters[i]);
+        console.log(OpenTradeCounters[i]);
+        setSelectedTradeCounter(OpenTradeCounters[i]);
         setSelectedPrice(Prices[i]);
     }
 
@@ -89,22 +90,24 @@ function Market() {
             const tradeCounter = parseInt(Number(tradeCounterHex._hex), 10);
             console.log("trade Counter : " + tradeCounter);
 
-            let openTradeCounter = [];
+            let openTradeCounters = [];
             for (let i = 0; i < tradeCounter; i++) {
                 const trade = await musicMarket.trades(i);
                 const status = getURIStringfromHex(trade.status);
 
                 if (status.startsWith("OPEN")) {
                     console.log("this is open!");
-                    openTradeCounter.push(i);
+                    openTradeCounters.push(i);
                 }
             }
-            console.log("OpenTradeCounter: " + openTradeCounter);
-            setOpenTradeCounterLength(openTradeCounter.length);
+            console.log("OpenTradeCounter: " + openTradeCounters); // [2]
+            console.log("length of open trade counters : " + openTradeCounters.length)
+            setOpenTradeCounters(openTradeCounters);
+            
             console.log("---------------------------")
-            if (openTradeCounter.length > 0) {
-                for (let i = 0; i < openTradeCounter.length; i++) {
-                    const trade = await musicMarket.trades(openTradeCounter[i]);
+            if (openTradeCounters.length > 0) {
+                for (let i = 0; i < openTradeCounters.length; i++) {
+                    const trade = await musicMarket.trades(openTradeCounters[i]);
 
                     console.log("Poster : " + trade.poster);
                     console.log("Item : " + trade.item);
@@ -170,11 +173,11 @@ function Market() {
         console.log("is allowed?")
         // const amountToDec = parseInt(Number(amount._hex), 10);
         const allowedAmount = parseInt(Number(await erc20Minter.allowance(accounts[0], addresses.musicMarket)), 10);
-        if (allowedAmount === 0) {
+        // if (allowedAmount === 0) {
             const tx = await erc20Minter.approve(addresses.musicMarket, SelectedPrice);
             await tx.wait();
             window.alert("your token has been approved to smart contract.");
-        }
+        // }
         setBuyButtonText("Purchase");
     }
 
@@ -182,6 +185,7 @@ function Market() {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = await provider.getSigner();
         const musicMarket = new ethers.Contract(addresses.musicMarket, MusicMarket.abi, signer);
+        console.log("Selected Trade Counter : " + SelectedTradeCounter);
         const tx = await musicMarket.executeTrade(SelectedTradeCounter);
         await tx.wait();
         window.alert("you just purchased NFT! please check out My Music.");
@@ -229,7 +233,7 @@ function Market() {
                     <div className="tokenInfo">
                         <div className="MTs">
                         {
-                            [...Array(OpenTradeCounterLength)].map((n, index) => (
+                            [...Array(OpenTradeCounters.length)].map((n, index) => (
                                 <div key={index}>
                                     <button onClick={() => putSongInfo(index)}>{Artists[index]} - {Titles[index]}</button>
                                 </div>
