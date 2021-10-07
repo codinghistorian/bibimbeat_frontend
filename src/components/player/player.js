@@ -7,6 +7,7 @@ import { FaPause } from "react-icons/fa"
 import { FaRandom } from "react-icons/fa"
 import { ImLoop } from "react-icons/im"
 import { MdPlaylistPlay } from "react-icons/md"
+import { useSelector } from 'react-redux';
 
 function Player() {
 
@@ -19,11 +20,30 @@ function Player() {
     const progressBar = useRef(); //ref to progressBar
     const animationRef = useRef(); //ref the animation
 
+    const musicUrl = useSelector((state) => state.playButtonReducer.musicUrl);
+    const isMusicButtonClicked = useSelector((state) => state.playButtonReducer.isMusicButtonClicked);
+    // console.log(musicUrl);
+
+    // console.log("A")
+
+
+    const whilePlaying = () => {
+        progressBar.current.value = audioPlayer.current.currentTime;
+        changePlayerCurrentTime();
+        animationRef.current = requestAnimationFrame(whilePlaying);
+    }
+
     useEffect(() => {
-        const seconds = Math.floor(audioPlayer.current.duration);
-        setDuration(seconds);
-        progressBar.current.max = seconds;
-    }, [audioPlayer?.current?.loadedmetadata, audioPlayer?.current?.readyState]);
+        if (isMusicButtonClicked) {
+            audioPlayer.current.play();
+            animationRef.current = requestAnimationFrame(whilePlaying);
+        }
+        else {
+            const seconds = Math.floor(audioPlayer.current.duration);
+            setDuration(seconds);
+            progressBar.current.max = seconds;
+        }
+    }, [isMusicButtonClicked, whilePlaying, audioPlayer?.current?.loadedmetadata, audioPlayer?.current?.readyState]);
 
     const calculateTime = (secs) => {
         const minutes = Math.floor(secs / 60);
@@ -45,15 +65,10 @@ function Player() {
         }
     }
 
-    const whilePlaying = () => {
-        progressBar.current.value = audioPlayer.current.currentTime;
-        changePlayerCurrentTime(); 
-        animationRef.current = requestAnimationFrame(whilePlaying);
-    }
 
     const changeRange = () => {
         audioPlayer.current.currentTime = progressBar.current.value;
-        changePlayerCurrentTime(); 
+        changePlayerCurrentTime();
     }
 
     const changePlayerCurrentTime = () => {
@@ -72,31 +87,31 @@ function Player() {
     }
 
     return (
-         <div className= {styles.audioPlayer}>
-            <audio ref={audioPlayer} src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload = "metadata"></audio>  
-            <button className = {styles.forwardBackward} onClick={backThirty}><FaStepBackward /> </button>
-            <button onClick= {togglePlayPause} className = {styles.playPause}>
-                { isPlaying ? <FaPause /> : <FaPlay className= {styles.play}/>}
+        <div className={styles.audioPlayer}>
+            <audio ref={audioPlayer} src={musicUrl} preload="metadata"></audio>
+            <button className={styles.forwardBackward} onClick={backThirty}><FaStepBackward /> </button>
+            <button onClick={togglePlayPause} className={styles.playPause}>
+                {isPlaying ? <FaPause /> : <FaPlay className={styles.play} />}
             </button>
-            <button className = {styles.forwardBackward} onClick={forwardThirty}><FaStepForward /></button>
-            <button className = {styles.forwardBackward}><FaRandom /></button>
-            <button className = {styles.forwardBackward}><ImLoop /></button>
-            <button className = {styles.forwardBackward}><MdPlaylistPlay /></button>
+            <button className={styles.forwardBackward} onClick={forwardThirty}><FaStepForward /></button>
+            <button className={styles.forwardBackward}><FaRandom /></button>
+            <button className={styles.forwardBackward}><ImLoop /></button>
+            <button className={styles.forwardBackward}><MdPlaylistPlay /></button>
 
             {/* current time */}
 
-            <div className = {styles.currentTime}>{calculateTime(currentTime)}</div>
+            <div className={styles.currentTime}>{calculateTime(currentTime)}</div>
 
             {/*  progress bar */}
 
             <div>
-                <input type ="range" className={styles.progressBar} defaultValue="0" ref={progressBar} onChange={changeRange}/>
+                <input type="range" className={styles.progressBar} defaultValue="0" ref={progressBar} onChange={changeRange} />
             </div>
 
             {/* duration */}
             <div className={styles.duration}>{(duration && !isNaN(duration)) && calculateTime(duration)}</div>
         </div>
-       
+
 
     );
 }

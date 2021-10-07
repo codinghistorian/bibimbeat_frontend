@@ -5,8 +5,12 @@ import MusicMarket from '../../abi/MusicMarket.json';
 import addresses from '../../environment/ContractAddress.json';
 import axios from 'axios';
 import './myMusicList.css';
+import { useDispatch } from 'react-redux';
+import { onChangeMusic } from './../../redux/modules/playButton';
 
 function MyMusicList() {
+
+    const dispatch = useDispatch();
 
     const [Images, setImages] = useState([]);
     const [Titles, setTitles] = useState([]);
@@ -26,6 +30,7 @@ function MyMusicList() {
     const [SelectedDescription, setSelectedDescription] = useState();
     const [SelectedExternalURL, setSelectedExternalURL] = useState();
     const [SelectedAmount, setSelectedAmount] = useState();
+    const [SelectedSong, setSelectedSong] = useState();
 
     const [SellButtonText, setSellButtonText] = useState("Sell");
     const [IsInputVisible, setIsInputVisible] = useState("hidden");
@@ -41,43 +46,69 @@ function MyMusicList() {
         setSelectedDescription(Descriptions[i]);
         setSelectedExternalURL(ExternalURLs[i]);
         setSelectedImage(Images[i]);
+        setSelectedSong(Songs[i]);
+    }
+
+    const clickPlayButton = () => {
+        dispatch(onChangeMusic(SelectedSong));
+    }
+
+    const initializeStates = () => {
+        setTokenIDs([]);
+        setAmounts([]);
+        setTitles([]);
+        setArtists([]);
+        setGenre([]);
+        setDescriptions([]);
+        setExternalURLs([]);
+        setImages([]);
+        setSongs([]);
     }
 
     useEffect(() => {
         const renderNFTList = async () => {
-
+            initializeStates();
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = await provider.getSigner();
             const musicFactory = new ethers.Contract(addresses.musicFactory, MusicFactory.abi, signer);
-            const tokenIdList = await musicFactory.getTokenIDs();
+            const address = await signer.getAddress();
+            const tokenLengthHex = await musicFactory.tokenId();
+            const tokenLength = parseInt(tokenLengthHex._hex);
+            const addressArray = Array(tokenLength).fill(address);
+            const tokenArray = [...Array(tokenLength)].map((_, i) => i + 1);
+            console.log("address Array : " + addressArray);
+            console.log("token Array : " + tokenArray);
 
-            await Promise.all(tokenIdList.map(async (res, index) => {
+            let tokenIDList = [];
+            let tokenAmountList = [];
+            (await musicFactory.balanceOfBatch(addressArray, tokenArray)).map((res, tokenID) => {
+                res = parseInt(res._hex);
+                if (res !== 0) {
+                    tokenIDList.push(tokenID + 1);
+                    tokenAmountList.push(res);
+                }
+                return res;
+            });
+            console.log(tokenAmountList);
+            
+            setTokenIDs(tokenIDList);
+            setAmounts(tokenAmountList);
+            
+            await tokenIDList.reduce(async (prevPromise, res, index) => {
+                await prevPromise;
 
-                //adds token ID
-                const tokenID = parseInt(Number(res._hex), 10);
-                setTokenIDs(prevArr => [...prevArr, tokenID]);
-
-                //adds token amount
-                const amount = await musicFactory.getTokenAmount(tokenID);
-                const amountToDec = parseInt(Number(amount._hex), 10);
-                setAmounts(prevArr => [...prevArr, amountToDec]);
-
-                // gets metadata from metada uri  
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                console.log(accounts[0])
-                const uri = await musicFactory.getTokenURI(accounts[0], tokenID);
+                const uri = await musicFactory.getTokenURI(res);
                 var hex = uri.toString();
                 var str = "";
                 for (var n = 2; n < hex.length; n += 2) {
                     str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
                 }
-                console.log(str);
                 const gatewayUri = getGatewayAddress(str);
                 const result = await axios.get(gatewayUri);
                 const metadata = result.data;
                 const image_url = getGatewayAddress(subIPFS(metadata.image));
                 const music_url = getGatewayAddress(subIPFS(metadata.animation_url));
-
+                
                 // adds metadata
                 setTitles(prevArr => [...prevArr, metadata.name]);
                 setArtists(prevArr => [...prevArr, metadata.artist]);
@@ -88,16 +119,26 @@ function MyMusicList() {
                 setSongs(prevArr => [...prevArr, music_url]);
 
                 if (index === 0) { // adds initial data
-                    setSelectedTokenID(tokenID);
-                    setSelectedAmount(amountToDec);
+                    setSelectedTokenID(tokenIDList[0]);
+                    setSelectedAmount(tokenAmountList[0]);
                     setSelectedTitle(metadata.name);
                     setSelectedArtist(metadata.artist);
                     setSelectedGenre(metadata.genre);
                     setSelectedDescription(metadata.description);
                     setSelectedExternalURL(metadata.external_url);
                     setSelectedImage(image_url);
-                    setSongs(music_url);
+                    setSelectedSong(music_url);
+                    // console.log("name : " + metadata.name);
+                    // console.log("music_url : " + music_url);
+                    // dispatch(onChangeMusic(music_url));
                 }
+            }, Promise.resolve());
+            
+
+            await Promise.all(tokenIDList.map(async (res, index) => {
+                // gets metadata from metada uri
+                
+              
             }));
         }
 
@@ -106,7 +147,7 @@ function MyMusicList() {
             console.log("account changed!");
             renderNFTList();
         });
-    }, []);
+    }, [dispatch]);
 
     const getGatewayAddress = (cid) => {
         var gatewayAddress = "https://ipfs.io/ipfs/" + cid
@@ -124,8 +165,8 @@ function MyMusicList() {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = await provider.getSigner();
         const musicFactory = new ethers.Contract(addresses.musicFactory, MusicFactory.abi, signer);
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        if (!(await musicFactory.isApprovedForAll(accounts[0], addresses.musicMarket))) {
+        const account = await signer.getAddress();
+        if (!(await musicFactory.isApprovedForAll(account, addresses.musicMarket))) {
             const tx = await musicFactory.setApprovalForAll(addresses.musicMarket, true);
             await tx.wait();
             window.alert("your token has been approved to smart contract.");    
@@ -178,6 +219,7 @@ function MyMusicList() {
                                     clickAddOnTradeblock();
                             }}>{SellButtonText}</button>
                             <input type="number" onChange={putPrice} style={{visibility: IsInputVisible}} placeholder="Set price"></input>
+                            <button onClick={clickPlayButton}>play</button>
                         </p>
                     </div>
                     <div>

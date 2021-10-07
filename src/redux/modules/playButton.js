@@ -9,22 +9,9 @@ const CHANGE_MUSIC = 'CHANGE_MUSIC';
 export const onChangeMusic = (newMusicUrl) => {
     return {
         type: CHANGE_MUSIC,
-        payload: newMusicUrl
+        payload: newMusicUrl,
     }
 }
-// function getEOA(): ThunkAction<string, RootState, null, AnyAction> {
-//   return async dispatch => {
-
-//   }
-// }
-
-// export const onChangeButtonText = () => (dispatch: any) => {
-//   return dispatch => {
-//     setTimout(() => {
-//       dispatch
-//     })
-//   }
-// }
 
 // 모든 액션 겍체들에 대한 타입을 준비해줍니다.
 // ReturnType<typeof _____> 는 특정 함수의 반환값을 추론해줍니다
@@ -39,17 +26,20 @@ export const onChangeMusic = (newMusicUrl) => {
 
 // 초기상태를 선언합니다.
 const initialState = {
-  musicUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+  musicUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+  isMusicButtonClicked: false,
 };
 
 // 리듀서를 작성합니다.
 // 리듀서에서는 state 와 함수의 반환값이 일치하도록 작성하세요.
 // 액션에서는 우리가 방금 만든 CounterAction 을 타입으로 설정합니다.
-function buttonTextReducer(state = initialState, action) {
+function playButtonReducer(state = initialState, action) {
+  
   switch (action.type) {
     case CHANGE_MUSIC:
       return {
-        musicUrl: action.newMusicUrl
+        musicUrl: action.payload,
+        isMusicButtonClicked: true
       }
     default:
       return state;

@@ -15,7 +15,6 @@ function Market() {
     const [TokenIDs, setTokenIDs] = useState([]);
     const [Descriptions, setDescriptions] = useState([]);
     const [ExternalURLs, setExternalURLs] = useState([]);
-    const [Songs, setSongs] = useState([]);
     const [Amounts, setAmounts] = useState([]);
     const [Prices, setPrices] = useState([]);
     const [TradeCounters, setTradeCounters] = useState([]);
@@ -31,13 +30,11 @@ function Market() {
     const [SelectedPrice, setSelectedPrice] = useState();
     const [SelectedTradeCounter, setSelectedTradeCounter] = useState();
 
-    const [TradeCounterLength, setTradeCounterLength] = useState();
+    const [OpenTradeCounterLength, setOpenTradeCounterLength] = useState();
 
     const [BuyButtonText, setBuyButtonText] = useState("Buy");
 
     const putSongInfo = (i) => {
-        console.log("index : " + i);
-        console.log("TokenID : " + TokenIDs[i]);
         setSelectedTokenID(TokenIDs[i]);
         setSelectedAmount(Amounts[i]);
         setSelectedTitle(Titles[i]);
@@ -47,6 +44,7 @@ function Market() {
         setSelectedExternalURL(ExternalURLs[i]);
         setSelectedImage(Images[i]);
         setSelectedTradeCounter(TradeCounters[i]);
+        setSelectedPrice(Prices[i]);
     }
 
     const getGatewayAddress = (cid) => {
@@ -67,36 +65,67 @@ function Market() {
         return str;
     }
 
+    const initializeStates = () => {
+        setTokenIDs([]);
+        setAmounts([]);
+        setTitles([]);
+        setArtists([]);
+        setGenre([]);
+        setDescriptions([]);
+        setExternalURLs([]);
+        setImages([]);
+    }
+
     useEffect(() => {
         const callTrades = async () => {
+            initializeStates();
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = await provider.getSigner();
             const musicMarket = new ethers.Contract(addresses.musicMarket, MusicMarket.abi, signer);
             console.log(musicMarket);
             console.log("contract address : " + addresses.musicMarket);
+
             const tradeCounterHex = await musicMarket.tradeCounter();
             const tradeCounter = parseInt(Number(tradeCounterHex._hex), 10);
-            setTradeCounterLength(tradeCounter);
+            console.log("trade Counter : " + tradeCounter);
 
-            if (tradeCounter > 0) {
-                for (let i = 0; i < tradeCounter; i++) {
-                    const trades = await musicMarket.trades(i);
-                    const poster = trades.poster;
-                    const amount = parseInt(Number(trades.amount._hex), 10);
-                    const tokenID = parseInt(Number(trades.item._hex), 10);
-                    const price = parseInt(Number(trades.price._hex), 10);
+            let openTradeCounter = [];
+            for (let i = 0; i < tradeCounter; i++) {
+                const trade = await musicMarket.trades(i);
+                const status = getURIStringfromHex(trade.status);
+
+                if (status.startsWith("OPEN")) {
+                    console.log("this is open!");
+                    openTradeCounter.push(i);
+                }
+            }
+            console.log("OpenTradeCounter: " + openTradeCounter);
+            setOpenTradeCounterLength(openTradeCounter.length);
+            console.log("---------------------------")
+            if (openTradeCounter.length > 0) {
+                for (let i = 0; i < openTradeCounter.length; i++) {
+                    const trade = await musicMarket.trades(openTradeCounter[i]);
+
+                    console.log("Poster : " + trade.poster);
+                    console.log("Item : " + trade.item);
+                    console.log("Amount : " + trade.amount);
+                    console.log("Price : " + trade.price);
+                    const status = getURIStringfromHex(trade.status);
+                    console.log("Status : " + status);
+
+                    const amount = parseInt(Number(trade.amount._hex), 10);
+                    const tokenID = parseInt(Number(trade.item._hex), 10);
+                    const price = parseInt(Number(trade.price._hex), 10);
                     // const status = getURIStringfromHex(trades.status._hex);
 
                     const musicFactory = new ethers.Contract(addresses.musicFactory, MusicFactory.abi, signer);
-                    const hexUri = await musicFactory.getTokenURI(poster, tokenID);
+                    const hexUri = await musicFactory.getTokenURI(tokenID);
                     const uri = getURIStringfromHex(hexUri);
                     const gatewayUri = getGatewayAddress(uri);
                     const result = await axios.get(gatewayUri);
                     const metadata = result.data;
                     const image_url = getGatewayAddress(subIPFS(metadata.image));
-                    const music_url = getGatewayAddress(subIPFS(metadata.animation_url));
-                    console.log("i : " + i);
-                    console.log("tokenID : " + tokenID);
+                    // const music_url = getGatewayAddress(subIPFS(metadata.animation_url));
 
                     setTokenIDs(prevArr => [...prevArr, tokenID]);
                     setTradeCounters(prevArr => [...prevArr, i]);
@@ -122,6 +151,7 @@ function Market() {
                         setSelectedTradeCounter(i);
                         // setSongs(music_url);
                     }
+
                 }
             }
         };
@@ -154,10 +184,9 @@ function Market() {
         const musicMarket = new ethers.Contract(addresses.musicMarket, MusicMarket.abi, signer);
         const tx = await musicMarket.executeTrade(SelectedTradeCounter);
         await tx.wait();
-        window.alert("your NFT has been uploaded on tradeblock!");
+        window.alert("you just purchased NFT! please check out My Music.");
         window.location.reload();
     }
-
 
     return (
         <article>
@@ -169,6 +198,8 @@ function Market() {
                             Token Amount - {SelectedAmount}
                             <br />
                             Title - {SelectedTitle}
+                            <br />
+                            Price - {SelectedPrice}
                             <br />
                             Artist - {SelectedArtist}
                             <br />
@@ -191,13 +222,12 @@ function Market() {
                         </p>
                     </div>
                     <div>
-
                         {
-                            [...Array(TradeCounterLength)].map((n, index) => (
+                            [...Array(OpenTradeCounterLength)].map((n, index) => (
                                 <div key={index}>
                                     <button onClick={() => putSongInfo(index)}>{Artists[index]} - {Titles[index]}</button>
                                 </div>
-                            )) 
+                            ))
                         }
                         {/* 
                             TradeCounters.map((res, index) => (

@@ -96,6 +96,8 @@ function MintNFT() {
         // post image file to the server
         const imageFormData = new FormData();
         imageFormData.append("image", Image);
+        console.log(Song);
+        console.log(Image);
 
         await axios.all([
           axios.post(ImagePostUrl, imageFormData, {
