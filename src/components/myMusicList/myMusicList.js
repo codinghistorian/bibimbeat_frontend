@@ -226,7 +226,7 @@ function MyMusicList() {
                             }}>{SellButtonText}
                             </button>
                             <input className="priceInput" type="number" onChange={putPrice} style={{ visibility: IsInputVisible }} placeholder="Set price"></input>
-                            <button onClick={clickPlayButton}>play</button>
+                            <button className="sell" id="play" onClick={clickPlayButton}>play</button>
                         </div>
                     </div>
                     <div>

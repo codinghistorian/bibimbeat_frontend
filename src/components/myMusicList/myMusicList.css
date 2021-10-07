@@ -71,3 +71,9 @@ z-index: 1;
 }
 
 
+#play {
+	position: relative;
+	left: 385px;
+	top: -104px;
+}
+
