@@ -2,3 +2,72 @@
     display: flex;
     flex-direction: row;
 }
+
+.container > div:nth-child(1) {
+    margin-right: 20px;
+}
+
+
+.container > div:nth-child(2) {
+    margin-left: 20px;
+}
+
+.tokenInfo {
+    top: 249px;
+left: 467px;
+width: 344px;
+height: 530px;
+/* background: #FEF9F9 0% 0% no-repeat padding-box; */
+background: 0% 0% no-repeat padding-box;
+
+box-shadow: 2px 3px 6px #00000029;
+border-radius: 52px;
+background-color: rgba(254,249,249, 0.65);
+/* opacity: 0.65; */
+text-align: center;
+z-index: 1;
+/* justify-content: center; */
+}
+
+.tokenImage {
+    opacity: 1;
+    margin-top: 40px;
+    height: 300px;
+    /* background-color:red; */
+}
+
+.metadata{
+    height: 180px;
+    /* background-color:blue; */
+}
+
+.sell {
+    position: relative;
+    left: 56px;
+    bottom: 20px;
+
+    margin-top: 38px;
+    /* margin-left: 105px; */
+    width: 140px;
+    height: 49.6px;
+    background: #944949 0% 0% no-repeat padding-box;
+    box-shadow: 2px 3px 6px #00000029;
+    border-radius: 52px;
+    opacity: 1;
+    color: white;
+    font-size: 20px;
+}
+
+.priceInput {
+    position: relative;
+    right: 110px;
+    bottom: 53px;
+    font-size: 20px;
+}
+
+.MTs {
+    position: relative;
+    top: 50%;
+}
+
+

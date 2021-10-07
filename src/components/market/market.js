@@ -192,9 +192,12 @@ function Market() {
         <article>
             <section>
                 <div className="container">
-                    <div>
+                    <div className="tokenInfo">
+                        <div className="tokenImage">
                         <img src={SelectedImage} alt={SelectedImage} width="200"></img>
-                        <p>
+                        </div>
+                       <div className="metadata">
+                       <p>
                             Token Amount - {SelectedAmount}
                             <br />
                             Title - {SelectedTitle}
@@ -211,7 +214,7 @@ function Market() {
                             <br />
                             ExternalURL - {SelectedExternalURL}
                             <br />
-                            <button onClick={() => {
+                            <button className="buy" onClick={() => {
                                 if (BuyButtonText === "Buy")
                                     clickBuyButton();
                                 else if (BuyButtonText === "Approve")
@@ -220,8 +223,11 @@ function Market() {
                                     clickPurchaseButton();
                             }}>{BuyButtonText}</button>
                         </p>
+                       </div>
                     </div>
                     <div>
+                    <div className="tokenInfo">
+                        <div className="MTs">
                         {
                             [...Array(OpenTradeCounterLength)].map((n, index) => (
                                 <div key={index}>
@@ -236,6 +242,8 @@ function Market() {
                         </div>
                         ))
                         } */}
+                    </div>
+                    </div>
                     </div>
                 </div>
             </section>

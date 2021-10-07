@@ -90,10 +90,10 @@ function MyMusicList() {
                 return res;
             });
             console.log(tokenAmountList);
-            
+
             setTokenIDs(tokenIDList);
             setAmounts(tokenAmountList);
-            
+
             await tokenIDList.reduce(async (prevPromise, res, index) => {
                 await prevPromise;
 
@@ -108,7 +108,7 @@ function MyMusicList() {
                 const metadata = result.data;
                 const image_url = getGatewayAddress(subIPFS(metadata.image));
                 const music_url = getGatewayAddress(subIPFS(metadata.animation_url));
-                
+
                 // adds metadata
                 setTitles(prevArr => [...prevArr, metadata.name]);
                 setArtists(prevArr => [...prevArr, metadata.artist]);
@@ -133,12 +133,12 @@ function MyMusicList() {
                     // dispatch(onChangeMusic(music_url));
                 }
             }, Promise.resolve());
-            
+
 
             await Promise.all(tokenIDList.map(async (res, index) => {
                 // gets metadata from metada uri
-                
-              
+
+
             }));
         }
 
@@ -169,12 +169,12 @@ function MyMusicList() {
         if (!(await musicFactory.isApprovedForAll(account, addresses.musicMarket))) {
             const tx = await musicFactory.setApprovalForAll(addresses.musicMarket, true);
             await tx.wait();
-            window.alert("your token has been approved to smart contract.");    
+            window.alert("your token has been approved to smart contract.");
         }
         setSellButtonText("Add on tradeblock");
         setIsInputVisible("visible");
     }
-    
+
     const clickAddOnTradeblock = async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = await provider.getSigner();
@@ -193,43 +193,54 @@ function MyMusicList() {
         <article>
             <section>
                 <div className="container">
-                    <div>
-                        <img src={SelectedImage} alt={SelectedImage} width="200"></img>
-                        <p>
-                            Token Amount - {SelectedAmount}
-                            <br />
-                            Title - {SelectedTitle}
-                            <br />
-                            Artist - {SelectedArtist}
-                            <br />
-                            Genre - {SelectedGenre}
-                            <br />
-                            ID - {SelectedTokenID}
-                            <br />
-                            Description - {SelectedDescription}
-                            <br />
-                            ExternalURL - {SelectedExternalURL}
-                            <br />
-                            <button onClick={() => {
+                    <div className="tokenInfo">
+                        <div className="tokenImage">
+                            <img src={SelectedImage} alt={SelectedImage} width="200"></img>
+                        </div>
+                        <div className="metadata">
+                            <p>
+                                Token Amount - {SelectedAmount}
+                                <br />
+                                Title - {SelectedTitle}
+                                <br />
+                                Artist - {SelectedArtist}
+                                <br />
+                                Genre - {SelectedGenre}
+                                <br />
+                                ID - {SelectedTokenID}
+                                <br />
+                                Description - {SelectedDescription}
+                                <br />
+                                ExternalURL - {SelectedExternalURL}
+                                <br />
+                            </p>
+                        </div>
+                        <div className="buttons">
+                            <button className="sell" onClick={() => {
                                 if (SellButtonText === "Sell")
                                     clickSellButton();
                                 else if (SellButtonText === "Approve")
                                     clickApproveButton();
                                 else if (SellButtonText === "Add on tradeblock")
                                     clickAddOnTradeblock();
-                            }}>{SellButtonText}</button>
-                            <input type="number" onChange={putPrice} style={{visibility: IsInputVisible}} placeholder="Set price"></input>
+                            }}>{SellButtonText}
+                            </button>
+                            <input className="priceInput" type="number" onChange={putPrice} style={{ visibility: IsInputVisible }} placeholder="Set price"></input>
                             <button onClick={clickPlayButton}>play</button>
-                        </p>
+                        </div>
                     </div>
                     <div>
-                        {
-                            TokenIDs.map((res, index) => (
-                                <div key={index}>
-                                    <button onClick={() => putSongInfo(index)}>{Artists[index]} - {Titles[index]}</button>
-                                </div>
-                            ))
-                        }
+                        <div className="tokenInfo">
+                            <div className="MTs">
+                                {
+                                    TokenIDs.map((res, index) => (
+                                        <div key={index}>
+                                            <button style={{ marginBottom: "10px" }} onClick={() => putSongInfo(index)}>{Artists[index]} - {Titles[index]}</button>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
