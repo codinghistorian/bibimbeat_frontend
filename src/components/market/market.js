@@ -107,6 +107,7 @@ function Market() {
             console.log("---------------------------")
             if (openTradeCounters.length > 0) {
                 for (let i = 0; i < openTradeCounters.length; i++) {
+                    
                     const trade = await musicMarket.trades(openTradeCounters[i]);
 
                     console.log("Poster : " + trade.poster);
@@ -151,7 +152,8 @@ function Market() {
                         setSelectedExternalURL(metadata.external_url);
                         setSelectedImage(image_url);
                         setSelectedPrice(price);
-                        setSelectedTradeCounter(i);
+                        console.log("Im gonna put this openTradeCounter : " + openTradeCounters[i]);
+                        setSelectedTradeCounter(openTradeCounters[i]);
                         // setSongs(music_url);
                     }
 
