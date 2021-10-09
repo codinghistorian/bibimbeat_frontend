@@ -10,7 +10,9 @@ import { useEffect, useState } from 'react';
 function Market() {
     const [Images, setImages] = useState([]);
     const [Titles, setTitles] = useState([]);
+    const [Titles16bytes, setTitles16bytes] = useState([]);
     const [Artists, setArtists] = useState([]);
+    const [Artists8bytes, setArtists8bytes] = useState([]);
     const [Genre, setGenre] = useState([]);
     const [TokenIDs, setTokenIDs] = useState([]);
     const [Descriptions, setDescriptions] = useState([]);
@@ -43,7 +45,6 @@ function Market() {
         setSelectedDescription(Descriptions[i]);
         setSelectedExternalURL(ExternalURLs[i]);
         setSelectedImage(Images[i]);
-        console.log(OpenTradeCounters[i]);
         setSelectedTradeCounter(OpenTradeCounters[i]);
         setSelectedPrice(Prices[i]);
     }
@@ -75,6 +76,7 @@ function Market() {
         setDescriptions([]);
         setExternalURLs([]);
         setImages([]);
+        setArtists8bytes([]);
     }
 
     useEffect(() => {
@@ -103,11 +105,11 @@ function Market() {
             console.log("OpenTradeCounter: " + openTradeCounters); // [2]
             console.log("length of open trade counters : " + openTradeCounters.length)
             setOpenTradeCounters(openTradeCounters);
-            
+
             console.log("---------------------------")
             if (openTradeCounters.length > 0) {
                 for (let i = 0; i < openTradeCounters.length; i++) {
-                    
+
                     const trade = await musicMarket.trades(openTradeCounters[i]);
 
                     console.log("Poster : " + trade.poster);
@@ -134,8 +136,27 @@ function Market() {
                     setTokenIDs(prevArr => [...prevArr, tokenID]);
                     setTradeCounters(prevArr => [...prevArr, i]);
                     setAmounts(prevArr => [...prevArr, amount]);
+
                     setTitles(prevArr => [...prevArr, metadata.name]);
+
+                    let newTitle = metadata.name;
+                    if (metadata.name.length > 16) {
+                        newTitle = metadata.name.substring(0, 15);
+                        newTitle = newTitle + "...";
+                    }
+                    console.log(newTitle);
+                    setTitles16bytes(prevArr => [...prevArr, newTitle]);
+
                     setArtists(prevArr => [...prevArr, metadata.artist]);
+
+                    // make artists name by 8 bytes
+                    let newArtist = metadata.artist;
+                    if (metadata.artist.length > 8) {
+                        newArtist = metadata.artist.substring(0, 7);
+                        newArtist = newArtist + "...";
+                    }
+                    setArtists8bytes(prevArr => [...prevArr, newArtist]);
+
                     setGenre(prevArr => [...prevArr, metadata.genre]);
                     setDescriptions(prevArr => [...prevArr, metadata.description]);
                     setExternalURLs(prevArr => [...prevArr, metadata.external_url]);
@@ -152,9 +173,7 @@ function Market() {
                         setSelectedExternalURL(metadata.external_url);
                         setSelectedImage(image_url);
                         setSelectedPrice(price);
-                        console.log("Im gonna put this openTradeCounter : " + openTradeCounters[i]);
                         setSelectedTradeCounter(openTradeCounters[i]);
-                        // setSongs(music_url);
                     }
 
                 }
@@ -176,9 +195,9 @@ function Market() {
         // const amountToDec = parseInt(Number(amount._hex), 10);
         const allowedAmount = parseInt(Number(await erc20Minter.allowance(accounts[0], addresses.musicMarket)), 10);
         // if (allowedAmount === 0) {
-            const tx = await erc20Minter.approve(addresses.musicMarket, SelectedPrice);
-            await tx.wait();
-            window.alert("your token has been approved to smart contract.");
+        const tx = await erc20Minter.approve(addresses.musicMarket, SelectedPrice);
+        await tx.wait();
+        window.alert("your token has been approved to smart contract.");
         // }
         setBuyButtonText("Purchase");
     }
@@ -198,62 +217,108 @@ function Market() {
         <article>
             <section>
                 <div className="container">
-                    <div className="tokenInfo">
-                        <div className="tokenImage">
-                        <img src={SelectedImage} alt={SelectedImage} width="200"></img>
+                    <div className="musicDescription">
+                        <div className="imgGrid">
+                            <img src={SelectedImage} alt={SelectedImage} width="200"></img>
                         </div>
-                       <div className="metadata">
-                       <p>
-                            Token Amount - {SelectedAmount}
-                            <br />
-                            Title - {SelectedTitle}
-                            <br />
-                            Price - {SelectedPrice}
-                            <br />
-                            Artist - {SelectedArtist}
-                            <br />
-                            Genre - {SelectedGenre}
-                            <br />
-                            ID - {SelectedTokenID}
-                            <br />
-                            Description - {SelectedDescription}
-                            <br />
-                            ExternalURL - {SelectedExternalURL}
-                            <br />
-                            <button className="buy" onClick={() => {
-                                if (BuyButtonText === "Buy")
-                                    clickBuyButton();
-                                else if (BuyButtonText === "Approve")
-                                    clickApproveButton();
-                                else if (BuyButtonText === "Purchase")
-                                    clickPurchaseButton();
-                            }}>{BuyButtonText}</button>
-                        </p>
-                       </div>
+
+                        <div className="firstRow">
+                            <div>
+                                Title
+                            </div>
+                            <div>
+                                Price
+                            </div>
+                        </div>
+                        <div className="firstRowInfo">
+                            <div>
+                                {SelectedAmount}
+                            </div>
+                            <div>
+                                {SelectedPrice} BBB
+                            </div>
+                        </div>
+
+                        <div className="secondRow">
+                            <div>
+                                Artist
+                            </div>
+                            <div>
+                                Genre
+                            </div>
+                            <div>
+                                ID
+                            </div>
+                        </div>
+                        <div className="secondRowInfo">
+                            <div>
+                                {SelectedArtist}
+                            </div>
+                            <div>
+                                {SelectedGenre}
+                            </div>
+                            <div>
+                                {SelectedTokenID}
+                            </div>
+                        </div>
+
+                        <div className="thirdRow">
+                            Description
+                        </div>
+                        <div className="thirdRowInfo">
+                            {SelectedDescription}
+                        </div>
+
+                        <div className="fourthRow">
+                            External URL
+                        </div>
+
+                        <div className="fourthRowInfo">
+                            {SelectedExternalURL}
+                        </div>
+                        <button className="buy" onClick={() => {
+                            if (BuyButtonText === "Buy")
+                                clickBuyButton();
+                            else if (BuyButtonText === "Approve")
+                                clickApproveButton();
+                            else if (BuyButtonText === "Purchase")
+                                clickPurchaseButton();
+                        }}>{BuyButtonText}</button>
                     </div>
                     <div>
-                    <div className="tokenInfo">
-                        <div className="MTs">
-                        {
-                            [...Array(OpenTradeCounters.length)].map((n, index) => (
-                                <div key={index}>
-                                    <button onClick={() => putSongInfo(index)}>{Artists[index]} - {Titles[index]}</button>
+                        <div className="metaData">
+
+                            <div className="itemPriceHeaders">
+                                <div className="item">
+                                    Item
                                 </div>
-                            ))
-                        }
-                        {/* 
-                            TradeCounters.map((res, index) => (
-                        <div key={index}>
-                            <button onClick={(index) => putSongInfo(index)}>{Artists[index]} - {Titles[index]}</button>
+                                <div className="price">
+                                    Price
+                                </div>
+                            </div>
+                            {
+                                [...Array(OpenTradeCounters.length)].map((n, index) => (
+                                    <div className="entry1" onClick={() => putSongInfo(index)}>
+                                        <div key={index}>
+                                            <p>{Artists8bytes[index]}</p>
+                                        </div>
+                                        <div><p>-</p></div>
+                                        <div>
+                                            <p>{Titles16bytes[index]}</p>
+                                        </div>
+                                        <div>
+                                            <p>{Prices[index]} BBB</p>
+                                        </div>
+                                    </div>
+                                ))
+                            }
                         </div>
-                        ))
-                        } */}
-                    </div>
-                    </div>
+                        <div className="scrollbar">
+                        </div>
                     </div>
                 </div>
             </section>
-        </article>
+        </article >
     );
 }
 

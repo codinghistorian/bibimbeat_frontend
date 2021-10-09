@@ -167,7 +167,7 @@ function MintNFT() {
           </div>
         </div>
         <div>
-          <div className="metaData">
+          <div className="mintMetadata">
             <form>
               <label className="label">
                 Title
