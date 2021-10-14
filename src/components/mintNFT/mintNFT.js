@@ -118,6 +118,9 @@ function MintNFT() {
         console.log(ipfsImage);
         console.log(ipfsMusic);
 
+        const signer = await provider.getSigner();
+        const creatorAddress = await signer.address();
+
         const data = {
           name: Title,
           artist: Artist,
@@ -126,6 +129,7 @@ function MintNFT() {
           image: ipfsImage,
           animation_url: ipfsMusic,
           external_url: ExternalURL,
+          creatorAddress: creatorAddress
         };
 
         // post json file to the server
@@ -134,15 +138,12 @@ function MintNFT() {
         });
 
         const metadataUri = metadataJson.data;
-        console.log(provider.connection);
-        const signer = await provider.getSigner();
         const musicFactory = new ethers.Contract(addresses.musicFactory, MusicFactory.abi, signer);
         const tx = await musicFactory.mintMusic(Amount, metadataUri);
         await tx.wait();
         window.alert("your NFT has been minted. check your music box!");
         window.location.reload();
       }
-
     }
   }
 

@@ -174,7 +174,6 @@ function Market() {
                         setSelectedPrice(price);
                         setSelectedTradeCounter(openTradeCounters[i]);
                     }
-
                 }
             }
         };
@@ -189,10 +188,10 @@ function Market() {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = await provider.getSigner();
         const erc20Minter = new ethers.Contract(addresses.erc20, ERC20Minter.abi, signer);
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        console.log("is allowed?")
+        const account = await signer.getAddress();
+
         // const amountToDec = parseInt(Number(amount._hex), 10);
-        const allowedAmount = parseInt(Number(await erc20Minter.allowance(accounts[0], addresses.musicMarket)), 10);
+        const allowedAmount = parseInt(Number(await erc20Minter.allowance(account, addresses.musicMarket)), 10);
         // if (allowedAmount === 0) {
         const tx = await erc20Minter.approve(addresses.musicMarket, SelectedPrice);
         await tx.wait();
@@ -231,7 +230,7 @@ function Market() {
                         </div>
                         <div className="firstRowInfo">
                             <div>
-                                {SelectedAmount}
+                                {SelectedTitle}
                             </div>
                             <div>
                                 {SelectedPrice} BBB
