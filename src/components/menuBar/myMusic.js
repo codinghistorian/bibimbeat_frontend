@@ -6,14 +6,14 @@ import { Link } from 'react-router-dom';
 function MyMusic() {
     return (
         <div>
-            <div className="myMusic">
-                <Link to="myMusicList" style={{ textDecoration: 'none' }}>
+            <Link to="myMusicList" style={{ textDecoration: 'none' }}>
+                <div className="myMusic">
                     <div style={{ textDecoration: 'none', backgroundColor: 'red', height: '0px' }}>
-                        <span id="my" >My</span>
+                        <span id="my">My</span>
                         <img id="img" src={music} alt={music}></img>
                     </div>
-                </Link>
-            </div>
+                </div>
+            </Link>
         </div>
     );
 }

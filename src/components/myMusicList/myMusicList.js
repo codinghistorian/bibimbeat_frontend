@@ -50,7 +50,12 @@ function MyMusicList() {
     }
 
     const clickPlayButton = () => {
-        dispatch(onChangeMusic(SelectedSong));
+        const currentSongData = {
+            musicUrl: SelectedSong,
+            artist: SelectedArtist,
+            title: SelectedTitle
+        }
+        dispatch(onChangeMusic(currentSongData));
     }
 
     const initializeStates = () => {
@@ -69,77 +74,73 @@ function MyMusicList() {
         const renderNFTList = async () => {
             initializeStates();
             const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = await provider.getSigner();
-            const musicFactory = new ethers.Contract(addresses.musicFactory, MusicFactory.abi, signer);
-            const address = await signer.getAddress();
-            const tokenLengthHex = await musicFactory.tokenId();
-            const tokenLength = parseInt(tokenLengthHex._hex);
-            const addressArray = Array(tokenLength).fill(address);
-            const tokenArray = [...Array(tokenLength)].map((_, i) => i + 1);
-            console.log("address Array : " + addressArray);
-            console.log("token Array : " + tokenArray);
-
-            let tokenIDList = [];
-            let tokenAmountList = [];
-            (await musicFactory.balanceOfBatch(addressArray, tokenArray)).map((res, tokenID) => {
-                res = parseInt(res._hex);
-                if (res !== 0) {
-                    tokenIDList.push(tokenID + 1);
-                    tokenAmountList.push(res);
-                }
-                return res;
-            });
-            console.log(tokenAmountList);
-
-            setTokenIDs(tokenIDList);
-            setAmounts(tokenAmountList);
-
-            await tokenIDList.reduce(async (prevPromise, res, index) => {
-                await prevPromise;
-
-                const uri = await musicFactory.getTokenURI(res);
-                var hex = uri.toString();
-                var str = "";
-                for (var n = 2; n < hex.length; n += 2) {
-                    str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
-                }
-                const gatewayUri = getGatewayAddress(str);
-                const result = await axios.get(gatewayUri);
-                const metadata = result.data;
-                const image_url = getGatewayAddress(subIPFS(metadata.image));
-                const music_url = getGatewayAddress(subIPFS(metadata.animation_url));
-
-                // adds metadata
-                setTitles(prevArr => [...prevArr, metadata.name]);
-                setArtists(prevArr => [...prevArr, metadata.artist]);
-                setGenre(prevArr => [...prevArr, metadata.genre]);
-                setDescriptions(prevArr => [...prevArr, metadata.description]);
-                setExternalURLs(prevArr => [...prevArr, metadata.external_url]);
-                setImages(prevArr => [...prevArr, image_url]);
-                setSongs(prevArr => [...prevArr, music_url]);
-
-                if (index === 0) { // adds initial data
-                    setSelectedTokenID(tokenIDList[0]);
-                    setSelectedAmount(tokenAmountList[0]);
-                    setSelectedTitle(metadata.name);
-                    setSelectedArtist(metadata.artist);
-                    setSelectedGenre(metadata.genre);
-                    setSelectedDescription(metadata.description);
-                    setSelectedExternalURL(metadata.external_url);
-                    setSelectedImage(image_url);
-                    setSelectedSong(music_url);
-                    // console.log("name : " + metadata.name);
-                    // console.log("music_url : " + music_url);
-                    // dispatch(onChangeMusic(music_url));
-                }
-            }, Promise.resolve());
-
-
-            await Promise.all(tokenIDList.map(async (res, index) => {
-                // gets metadata from metada uri
-
-
-            }));
+            const listAccounts = await provider.listAccounts();
+            if (listAccounts.length) {
+                const signer = await provider.getSigner();
+                const musicFactory = new ethers.Contract(addresses.musicFactory, MusicFactory.abi, signer);
+                const address = await signer.getAddress();
+                const tokenLengthHex = await musicFactory.tokenId();
+                const tokenLength = parseInt(tokenLengthHex._hex);
+                const addressArray = Array(tokenLength).fill(address);
+                const tokenArray = [...Array(tokenLength)].map((_, i) => i + 1);
+                console.log("address Array : " + addressArray);
+                console.log("token Array : " + tokenArray);
+    
+                let tokenIDList = [];
+                let tokenAmountList = [];
+                (await musicFactory.balanceOfBatch(addressArray, tokenArray)).map((res, tokenID) => {
+                    res = parseInt(res._hex);
+                    if (res !== 0) {
+                        tokenIDList.push(tokenID + 1);
+                        tokenAmountList.push(res);
+                    }
+                    return res;
+                });
+                console.log(tokenAmountList);
+    
+                setTokenIDs(tokenIDList);
+                setAmounts(tokenAmountList);
+    
+                await tokenIDList.reduce(async (prevPromise, res, index) => {
+                    await prevPromise;
+    
+                    const uri = await musicFactory.getTokenURI(res);
+                    var hex = uri.toString();
+                    var str = "";
+                    for (var n = 2; n < hex.length; n += 2) {
+                        str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+                    }
+                    const gatewayUri = getGatewayAddress(str);
+                    const result = await axios.get(gatewayUri);
+                    const metadata = result.data;
+                    const image_url = getGatewayAddress(subIPFS(metadata.image));
+                    const music_url = getGatewayAddress(subIPFS(metadata.animation_url));
+    
+                    // adds metadata
+                    setTitles(prevArr => [...prevArr, metadata.name]);
+                    setArtists(prevArr => [...prevArr, metadata.artist]);
+                    setGenre(prevArr => [...prevArr, metadata.genre]);
+                    setDescriptions(prevArr => [...prevArr, metadata.description]);
+                    setExternalURLs(prevArr => [...prevArr, metadata.external_url]);
+                    setImages(prevArr => [...prevArr, image_url]);
+                    setSongs(prevArr => [...prevArr, music_url]);
+    
+                    if (index === 0) { // adds initial data
+                        setSelectedTokenID(tokenIDList[0]);
+                        setSelectedAmount(tokenAmountList[0]);
+                        setSelectedTitle(metadata.name);
+                        setSelectedArtist(metadata.artist);
+                        setSelectedGenre(metadata.genre);
+                        setSelectedDescription(metadata.description);
+                        setSelectedExternalURL(metadata.external_url);
+                        setSelectedImage(image_url);
+                        setSelectedSong(music_url);
+                        // console.log("name : " + metadata.name);
+                        // console.log("music_url : " + music_url);
+                        // dispatch(onChangeMusic(music_url));
+                    }
+                }, Promise.resolve());
+            }
         }
 
         renderNFTList();
@@ -147,7 +148,7 @@ function MyMusicList() {
             console.log("account changed!");
             renderNFTList();
         });
-    }, [dispatch]);
+    }, []);
 
     const getGatewayAddress = (cid) => {
         var gatewayAddress = "https://ipfs.io/ipfs/" + cid

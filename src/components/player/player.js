@@ -1,10 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styles from "./audioPlayer.module.css"
-import { FaStepForward } from "react-icons/fa"
-import { FaStepBackward } from "react-icons/fa"
-import { FaPlay } from "react-icons/fa"
-import { FaPause } from "react-icons/fa"
-import { FaRandom } from "react-icons/fa"
+import { FaStepForward, FaStepBackward, FaRegPlayCircle, FaRegPauseCircle, FaRandom, FaVolumeUp } from "react-icons/fa"
 import { ImLoop } from "react-icons/im"
 import { MdPlaylistPlay } from "react-icons/md"
 import { useSelector } from 'react-redux';
@@ -21,11 +17,8 @@ function Player() {
     const animationRef = useRef(); //ref the animation
 
     const musicUrl = useSelector((state) => state.playButtonReducer.musicUrl);
-    const isMusicButtonClicked = useSelector((state) => state.playButtonReducer.isMusicButtonClicked);
-    // console.log(musicUrl);
-
-    // console.log("A")
-
+    const artist = useSelector((state) => state.playButtonReducer.artist);
+    const title = useSelector((state) => state.playButtonReducer.title);
 
     const whilePlaying = () => {
         progressBar.current.value = audioPlayer.current.currentTime;
@@ -34,37 +27,35 @@ function Player() {
     }
 
     useEffect(() => {
-        if (isMusicButtonClicked) {
-            audioPlayer.current.play();
-            animationRef.current = requestAnimationFrame(whilePlaying);
-        }
-        else {
-            const seconds = Math.floor(audioPlayer.current.duration);
-            setDuration(seconds);
-            progressBar.current.max = seconds;
-        }
-    }, [isMusicButtonClicked, whilePlaying, audioPlayer?.current?.loadedmetadata, audioPlayer?.current?.readyState]);
+        const seconds = Math.floor(audioPlayer.current.duration);
+        console.log(seconds);
+        setDuration(seconds);
+        progressBar.current.max = seconds;
+
+    }, [audioPlayer?.current?.loadedmetadata, audioPlayer?.current?.readyState]);
 
     const calculateTime = (secs) => {
         const minutes = Math.floor(secs / 60);
-        const returnedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-        const seconds = Math.floor(secs % 6);
+        const returnedMinutes = `${minutes}`;
+        const seconds = Math.floor(secs % 60);
         const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
-        return `${returnedMinutes} : ${returnedSeconds}`;
+        return `${returnedMinutes}.${returnedSeconds}`;
     }
 
-    const togglePlayPause = () => {
+    const togglePlayPause = async () => {
         const prevValue = isPlaying;
-        setIsPlaying(!prevValue);
-        if (!prevValue) {
+        setIsPlaying(!prevValue); // isPlaying = false, prevValue = true
+        if (!prevValue) { // if prevValue = false
+            console.log("play!");
             audioPlayer.current.play();
-            animationRef.current = requestAnimationFrame(whilePlaying)
+            animationRef.current = requestAnimationFrame(whilePlaying);
         } else {
+            console.log("pause!");
+            console.log(audioPlayer.current);
             audioPlayer.current.pause();
             cancelAnimationFrame(animationRef.current);
         }
     }
-
 
     const changeRange = () => {
         audioPlayer.current.currentTime = progressBar.current.value;
@@ -77,23 +68,29 @@ function Player() {
     }
 
     const backThirty = () => {
-        progressBar.current.value = Number(progressBar.current.value - 30);
+        progressBar.current.value = (Number(progressBar.current.value) - 30).toString();
         changeRange();
     }
 
     const forwardThirty = () => {
-        progressBar.current.value = Number(progressBar.current.value + 30);
+        progressBar.current.value = (Number(progressBar.current.value) + 30).toString();
         changeRange();
     }
 
     return (
         <div className={styles.audioPlayer}>
-            <audio ref={audioPlayer} src={musicUrl} preload="metadata"></audio>
+            <audio ref={audioPlayer} src={musicUrl} preload="metadata" onLoadedMetadata={(e) => {
+                setIsPlaying(true);
+                audioPlayer.current.play();
+                animationRef.current = requestAnimationFrame(whilePlaying);
+                setDuration(audioPlayer.current.duration);
+                }}></audio>
             <button className={styles.forwardBackward} onClick={backThirty}><FaStepBackward /> </button>
             <button onClick={togglePlayPause} className={styles.playPause}>
-                {isPlaying ? <FaPause /> : <FaPlay className={styles.play} />}
+                {isPlaying ? <FaRegPauseCircle /> : <FaRegPlayCircle />}
             </button>
             <button className={styles.forwardBackward} onClick={forwardThirty}><FaStepForward /></button>
+            <div className={styles.blank}></div>
             <button className={styles.forwardBackward}><FaRandom /></button>
             <button className={styles.forwardBackward}><ImLoop /></button>
             <button className={styles.forwardBackward}><MdPlaylistPlay /></button>
@@ -109,7 +106,16 @@ function Player() {
             </div>
 
             {/* duration */}
-            <div className={styles.duration}>{(duration && !isNaN(duration)) && calculateTime(duration)}</div>
+            <div className={styles.duration}>{isNaN(duration) ? calculateTime(0) : calculateTime(duration)}</div>
+            <button className={styles.forwardBackward}><FaVolumeUp /></button>
+            <div>
+                <div className={styles.artistInfo}>
+                    {artist}
+                </div>
+                <div className={styles.titleInfo}>
+                    {title}
+                </div>
+            </div>
         </div>
 
 

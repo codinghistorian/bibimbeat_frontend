@@ -7,7 +7,8 @@
     line-height: 30px; */
     left: 23%;
     position: relative;
-    font-family: 'Roboto', sans-serif;
+    font: Righteous;
+    /* font-family: 'Roboto', sans-serif; */
 }
 
 
@@ -16,16 +17,18 @@
     box-shadow: 0px 3px 6px #07030329;
     background: #ffb0bc;
     padding-left: 10px;
-    padding-right: 5px;
+    padding-right: 10px;
     width: 115px;
     height: 30px;
     position: relative;
     top: 68px;
     left: 10px;
+    cursor: pointer;
 }
 #connectWallet > span {
     position: relative;
     bottom: 67px;
     color: #FFFFFF;
-    font-style: italic;
+    display: block;
+    text-align: center;
 }

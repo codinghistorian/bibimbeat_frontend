@@ -63,8 +63,10 @@ function ConnectWallet() {
     }, [])
     return (
         <div>
-            <div id="connectWallet" onClick={connectWallet}>
-                <span>{ButtonText}</span>
+            <div>
+                <div id="connectWallet" onClick={connectWallet}>
+                    <span>{ButtonText}</span>
+                </div>
             </div>
         </div>
     );

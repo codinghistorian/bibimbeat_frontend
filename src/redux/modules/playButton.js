@@ -5,11 +5,11 @@
 const CHANGE_MUSIC = 'CHANGE_MUSIC';
 
 
-// 액션 생성함수를 선언합니다
-export const onChangeMusic = (newMusicUrl) => {
+// Action Creator 
+export const onChangeMusic = (currentSongData) => {
     return {
         type: CHANGE_MUSIC,
-        payload: newMusicUrl,
+        payload: currentSongData,
     }
 }
 
@@ -26,8 +26,9 @@ export const onChangeMusic = (newMusicUrl) => {
 
 // 초기상태를 선언합니다.
 const initialState = {
-  musicUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-  isMusicButtonClicked: false,
+  musicUrl: "",
+  artist: "",
+  title: ""
 };
 
 // 리듀서를 작성합니다.
@@ -38,8 +39,9 @@ function playButtonReducer(state = initialState, action) {
   switch (action.type) {
     case CHANGE_MUSIC:
       return {
-        musicUrl: action.payload,
-        isMusicButtonClicked: true
+        musicUrl: action.payload.musicUrl,
+        artist: action.payload.artist,
+        title: action.payload.title
       }
     default:
       return state;

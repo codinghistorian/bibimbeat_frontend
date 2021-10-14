@@ -83,8 +83,7 @@ function Market() {
         const callTrades = async () => {
             initializeStates();
             const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = await provider.getSigner();
-            const musicMarket = new ethers.Contract(addresses.musicMarket, MusicMarket.abi, signer);
+            const musicMarket = new ethers.Contract(addresses.musicMarket, MusicMarket.abi, provider);
             console.log(musicMarket);
             console.log("contract address : " + addresses.musicMarket);
 
@@ -124,7 +123,7 @@ function Market() {
                     const price = parseInt(Number(trade.price._hex), 10);
                     // const status = getURIStringfromHex(trades.status._hex);
 
-                    const musicFactory = new ethers.Contract(addresses.musicFactory, MusicFactory.abi, signer);
+                    const musicFactory = new ethers.Contract(addresses.musicFactory, MusicFactory.abi, provider);
                     const hexUri = await musicFactory.getTokenURI(tokenID);
                     const uri = getURIStringfromHex(hexUri);
                     const gatewayUri = getGatewayAddress(uri);
@@ -298,8 +297,8 @@ function Market() {
                             </div>
                             {
                                 [...Array(OpenTradeCounters.length)].map((n, index) => (
-                                    <div className="entry1" onClick={() => putSongInfo(index)}>
-                                        <div key={index}>
+                                    <div key={index} className="entry1" onClick={() => putSongInfo(index)}>
+                                        <div>
                                             <p>{Artists8bytes[index]}</p>
                                         </div>
                                         <div><p>-</p></div>
