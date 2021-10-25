@@ -33,12 +33,12 @@
 .title {
     font-size:50px;
     text-shadow: 0px 3px 6px #00000029;
-    color: #483333;
+    color: white;
 }
 .song {
     font-size: 24px;
     text-shadow: 0px 3px 6px #00000029;
-    color: #483333;
+    color: white;
 }
 
 .songPlay {

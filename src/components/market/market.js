@@ -19,7 +19,7 @@ function Market() {
     const [ExternalURLs, setExternalURLs] = useState([]);
     const [Amounts, setAmounts] = useState([]);
     const [Prices, setPrices] = useState([]);
-    const [TradeCounters, setTradeCounters] = useState([]);
+    const [WeiPrices, setWeiPrices] = useState([]);
 
     const [SelectedImage, setSelectedImage] = useState();
     const [SelectedTitle, setSelectedTitle] = useState();
@@ -30,11 +30,14 @@ function Market() {
     const [SelectedExternalURL, setSelectedExternalURL] = useState();
     const [SelectedAmount, setSelectedAmount] = useState();
     const [SelectedPrice, setSelectedPrice] = useState();
+    const [SelectedWeiPrice, setSelectedWeiPrice] = useState();
     const [SelectedTradeCounter, setSelectedTradeCounter] = useState();
 
     const [OpenTradeCounters, setOpenTradeCounters] = useState([]);
 
     const [BuyButtonText, setBuyButtonText] = useState("Buy");
+
+    const [AmountToBuy, setAmountToBuy] = useState();
 
     const putSongInfo = (i) => {
         setSelectedTokenID(TokenIDs[i]);
@@ -47,6 +50,7 @@ function Market() {
         setSelectedImage(Images[i]);
         setSelectedTradeCounter(OpenTradeCounters[i]);
         setSelectedPrice(Prices[i]);
+        setSelectedWeiPrice(WeiPrices[i]);
     }
 
     const getGatewayAddress = (cid) => {
@@ -77,102 +81,107 @@ function Market() {
         setExternalURLs([]);
         setImages([]);
         setArtists8bytes([]);
+        
     }
 
     useEffect(() => {
         const callTrades = async () => {
             initializeStates();
             const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const musicMarket = new ethers.Contract(addresses.musicMarket, MusicMarket.abi, provider);
-            console.log(musicMarket);
-            console.log("contract address : " + addresses.musicMarket);
-
-            const tradeCounterHex = await musicMarket.tradeCounter();
-            const tradeCounter = parseInt(Number(tradeCounterHex._hex), 10);
-            console.log("trade Counter : " + tradeCounter);
-
-            let openTradeCounters = [];
-            for (let i = 0; i < tradeCounter; i++) {
-                const trade = await musicMarket.trades(i);
-                const status = getURIStringfromHex(trade.status);
-
-                if (status.startsWith("OPEN")) {
-                    console.log("this is open!");
-                    openTradeCounters.push(i);
-                }
-            }
-            console.log("OpenTradeCounter: " + openTradeCounters); // [2]
-            console.log("length of open trade counters : " + openTradeCounters.length)
-            setOpenTradeCounters(openTradeCounters);
-
-            console.log("---------------------------")
-            if (openTradeCounters.length > 0) {
-                for (let i = 0; i < openTradeCounters.length; i++) {
-
-                    const trade = await musicMarket.trades(openTradeCounters[i]);
-
-                    console.log("Poster : " + trade.poster);
-                    console.log("Item : " + trade.item);
-                    console.log("Amount : " + trade.amount);
-                    console.log("Price : " + trade.price);
+            const network = await provider.getNetwork();
+            if (network.chainId === 4) {
+                const musicMarket = new ethers.Contract(addresses.musicMarket, MusicMarket.abi, provider);
+                const tradeCounterHex = await musicMarket.tradeCounter();
+                const tradeCounter = parseInt(Number(tradeCounterHex._hex), 10);
+    
+                let openTradeCounters = [];
+                for (let i = 0; i < tradeCounter; i++) {
+                    const trade = await musicMarket.trades(i);
                     const status = getURIStringfromHex(trade.status);
-                    console.log("Status : " + status);
-
-                    const amount = parseInt(Number(trade.amount._hex), 10);
-                    const tokenID = parseInt(Number(trade.item._hex), 10);
-                    const price = parseInt(Number(trade.price._hex), 10);
-                    // const status = getURIStringfromHex(trades.status._hex);
-
-                    const musicFactory = new ethers.Contract(addresses.musicFactory, MusicFactory.abi, provider);
-                    const hexUri = await musicFactory.getTokenURI(tokenID);
-                    const uri = getURIStringfromHex(hexUri);
-                    const gatewayUri = getGatewayAddress(uri);
-                    const result = await axios.get(gatewayUri);
-                    const metadata = result.data;
-                    const image_url = getGatewayAddress(subIPFS(metadata.image));
-                    // const music_url = getGatewayAddress(subIPFS(metadata.animation_url));
-
-                    setTokenIDs(prevArr => [...prevArr, tokenID]);
-                    setTradeCounters(prevArr => [...prevArr, i]);
-                    setAmounts(prevArr => [...prevArr, amount]);
-
-                    setTitles(prevArr => [...prevArr, metadata.name]);
-
-                    let newTitle = metadata.name;
-                    if (metadata.name.length > 16) {
-                        newTitle = metadata.name.substring(0, 15);
-                        newTitle = newTitle + "...";
+    
+                    if (status.startsWith("OPEN")) {
+                        console.log("this is open!");
+                        openTradeCounters.push(i);
                     }
-                    console.log(newTitle);
-                    setTitles16bytes(prevArr => [...prevArr, newTitle]);
-
-                    setArtists(prevArr => [...prevArr, metadata.artist]);
-
-                    // make artists name by 8 bytes
-                    let newArtist = metadata.artist;
-                    if (metadata.artist.length > 8) {
-                        newArtist = metadata.artist.substring(0, 7);
-                        newArtist = newArtist + "...";
-                    }
-                    setArtists8bytes(prevArr => [...prevArr, newArtist]);
-
-                    setGenre(prevArr => [...prevArr, metadata.genre]);
-                    setDescriptions(prevArr => [...prevArr, metadata.description]);
-                    setExternalURLs(prevArr => [...prevArr, metadata.external_url]);
-                    setImages(prevArr => [...prevArr, image_url]);
-                    setPrices(prevArr => [...prevArr, price]);
-
-                    if (i === 0) { // adds initial data
-                        setSelectedTokenID(tokenID);
-                        setSelectedAmount(amount);
-                        setSelectedTitle(metadata.name);
-                        setSelectedArtist(metadata.artist);
-                        setSelectedGenre(metadata.genre);
-                        setSelectedDescription(metadata.description);
-                        setSelectedExternalURL(metadata.external_url);
-                        setSelectedImage(image_url);
-                        setSelectedPrice(price);
-                        setSelectedTradeCounter(openTradeCounters[i]);
+                }
+                console.log("OpenTradeCounter: " + openTradeCounters); // [2]
+                console.log("length of open trade counters : " + openTradeCounters.length)
+                setOpenTradeCounters(openTradeCounters);
+    
+                console.log("---------------------------")
+                if (openTradeCounters.length > 0) {
+                    for (let i = 0; i < openTradeCounters.length; i++) {
+    
+                        const trade = await musicMarket.trades(openTradeCounters[i]);
+    
+                        console.log("Poster : " + trade.poster);
+                        console.log("Item : " + trade.item);
+                        console.log("Amount : " + trade.amount);
+                        console.log("Price : " + trade.price);
+                        const status = getURIStringfromHex(trade.status);
+                        console.log("Status : " + status);
+    
+                        const amount = parseInt(Number(trade.amount._hex), 10);
+                        const tokenID = parseInt(Number(trade.item._hex), 10);
+                        const weiPrice = trade.price._hex;
+                        const etherPrice = ethers.BigNumber.from(trade.price._hex);
+                        console.log("price hx : " + weiPrice);
+                        const price = ethers.utils.formatEther(etherPrice);
+                        console.log(price);
+                        // const status = getURIStringfromHex(trades.status._hex);
+    
+                        const musicFactory = new ethers.Contract(addresses.musicFactory, MusicFactory.abi, provider);
+                        const hexUri = await musicFactory.getTokenURI(tokenID);
+                        const uri = getURIStringfromHex(hexUri);
+                        const gatewayUri = getGatewayAddress(uri);
+                        const result = await axios.get(gatewayUri);
+                        const metadata = result.data;
+                        const image_url = getGatewayAddress(subIPFS(metadata.image));
+                        // const music_url = getGatewayAddress(subIPFS(metadata.animation_url));
+    
+                        setTokenIDs(prevArr => [...prevArr, tokenID]);
+                        setAmounts(prevArr => [...prevArr, amount]);
+    
+                        setTitles(prevArr => [...prevArr, metadata.name]);
+    
+                        let newTitle = metadata.name;
+                        if (metadata.name.length > 16) {
+                            newTitle = metadata.name.substring(0, 15);
+                            newTitle = newTitle + "...";
+                        }
+                        console.log(newTitle);
+                        setTitles16bytes(prevArr => [...prevArr, newTitle]);
+    
+                        setArtists(prevArr => [...prevArr, metadata.artist]);
+    
+                        // make artists name by 8 bytes
+                        let newArtist = metadata.artist;
+                        if (metadata.artist.length > 8) {
+                            newArtist = metadata.artist.substring(0, 7);
+                            newArtist = newArtist + "...";
+                        }
+                        setArtists8bytes(prevArr => [...prevArr, newArtist]);
+    
+                        setGenre(prevArr => [...prevArr, metadata.genre]);
+                        setDescriptions(prevArr => [...prevArr, metadata.description]);
+                        setExternalURLs(prevArr => [...prevArr, metadata.external_url]);
+                        setImages(prevArr => [...prevArr, image_url]);
+                        setPrices(prevArr => [...prevArr, price]);
+                        setWeiPrices(prevArr => [...prevArr, weiPrice]);
+    
+                        if (i === 0) { // adds initial data
+                            setSelectedTokenID(tokenID);
+                            setSelectedAmount(amount);
+                            setSelectedTitle(metadata.name);
+                            setSelectedArtist(metadata.artist);
+                            setSelectedGenre(metadata.genre);
+                            setSelectedDescription(metadata.description);
+                            setSelectedExternalURL(metadata.external_url);
+                            setSelectedImage(image_url);
+                            setSelectedPrice(price);
+                            setSelectedWeiPrice(weiPrice);
+                            setSelectedTradeCounter(openTradeCounters[i]);
+                        }
                     }
                 }
             }
@@ -193,7 +202,14 @@ function Market() {
         // const amountToDec = parseInt(Number(amount._hex), 10);
         const allowedAmount = parseInt(Number(await erc20Minter.allowance(account, addresses.musicMarket)), 10);
         // if (allowedAmount === 0) {
-        const tx = await erc20Minter.approve(addresses.musicMarket, SelectedPrice);
+        console.log("price : " + SelectedPrice);
+        console.log("wei price: " + SelectedWeiPrice);
+        console.log("amount to buy : " + AmountToBuy)
+        const AmountToBuyToHex = "0x" + parseInt(AmountToBuy).toString(16);
+        console.log("Amount To Buy To Hex : " + AmountToBuyToHex);
+        const amountToApprove = "0x" + (SelectedWeiPrice * AmountToBuyToHex).toString(16);
+        console.log("amount to approve : " + amountToApprove);
+        const tx = await erc20Minter.approve(addresses.musicMarket, amountToApprove);
         await tx.wait();
         window.alert("your token has been approved to smart contract.");
         // }
@@ -204,11 +220,14 @@ function Market() {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = await provider.getSigner();
         const musicMarket = new ethers.Contract(addresses.musicMarket, MusicMarket.abi, signer);
-        console.log("Selected Trade Counter : " + SelectedTradeCounter);
-        const tx = await musicMarket.executeTrade(SelectedTradeCounter);
+        const tx = await musicMarket.executeTrade(SelectedTradeCounter, AmountToBuy);
         await tx.wait();
         window.alert("you just purchased NFT! please check out My Music.");
         window.location.reload();
+    }
+    
+    const putAmountToSell = (e) => {
+        setAmountToBuy(e.target.value);
     }
 
     return (
@@ -218,6 +237,7 @@ function Market() {
                     <div className="musicDescription">
                         <div className="imgGrid">
                             <img src={SelectedImage} alt={SelectedImage} width="200"></img>
+                            {SelectedAmount}
                         </div>
 
                         <div className="firstRow">
@@ -282,6 +302,7 @@ function Market() {
                             else if (BuyButtonText === "Purchase")
                                 clickPurchaseButton();
                         }}>{BuyButtonText}</button>
+                        <input className="amountInput" type="number" onChange={putAmountToSell} placeholder="Set amount to sell"></input>
                     </div>
                     <div>
                         <div className="metaData">

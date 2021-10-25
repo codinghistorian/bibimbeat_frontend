@@ -6,15 +6,18 @@ import MyMusicList from './components/myMusicList/myMusicList';
 import MintNFT from './components/mintNFT/mintNFT';
 import Market from './components/market/market';
 import { Route, Link } from 'react-router-dom';
+// import Video from './components/video/video';
 // import { useState } from 'react';
 
 function App() {
   return (
     <div>
+
       <div className="backGround">
         <div className="menuBar">
           <MenuBar link={Link} />
         </div>
+        {/* <Video /> */}
         <div className="banner">
           <Route exact path="/" component={Banner} />
           <Route exact path="/myMusicList" component={MyMusicList} />

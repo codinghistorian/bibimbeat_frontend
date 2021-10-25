@@ -1,9 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+* {
+    font-family: 'Righteous', sans-serif;
+}
+
 .backGround {
-    background-image: url(./components/images/bg.png);
+    background-image: url(./components/images/bg2.jpg);
     width: 100vw;
     height: 100vh;
-    background-position:center;
-    /* background-size: auto; */
+    background-position: center;
+    background-size: auto;
 }
 
 .banner {

@@ -12,10 +12,6 @@
     line-height: 164px;
 }
 
-.myMusic {
-    /* position: relative; */
-}
-
 .connectWallet {
     display: flex;
     flex-direction: row;

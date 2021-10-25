@@ -119,7 +119,7 @@ function MintNFT() {
         console.log(ipfsMusic);
 
         const signer = await provider.getSigner();
-        const creatorAddress = await signer.address();
+        const creatorAddress = await signer.getAddress();
 
         const data = {
           name: Title,

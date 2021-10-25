@@ -51,6 +51,7 @@ function MyMusicList() {
         setSelectedImage(Images[i]);
         setSelectedSong(Songs[i]);
         setSelectedCreatorAddress(CreatorAddresses[i]);
+        console.log(CreatorAddresses[i]);
     }
 
     const clickPlayButton = () => {
@@ -79,71 +80,75 @@ function MyMusicList() {
         const renderNFTList = async () => {
             initializeStates();
             const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const listAccounts = await provider.listAccounts();
-            if (listAccounts.length) {
-                const signer = await provider.getSigner();
-                const musicFactory = new ethers.Contract(addresses.musicFactory, MusicFactory.abi, signer);
-                const address = await signer.getAddress();
-                const tokenLengthHex = await musicFactory.tokenId();
-                const tokenLength = parseInt(tokenLengthHex._hex);
-                const addressArray = Array(tokenLength).fill(address);
-                const tokenArray = [...Array(tokenLength)].map((_, i) => i + 1);
-                console.log("address Array : " + addressArray);
-                console.log("token Array : " + tokenArray);
-
-                let tokenIDList = [];
-                let tokenAmountList = [];
-                (await musicFactory.balanceOfBatch(addressArray, tokenArray)).map((res, tokenID) => {
-                    res = parseInt(res._hex);
-                    if (res !== 0) {
-                        tokenIDList.push(tokenID + 1);
-                        tokenAmountList.push(res);
-                    }
-                    return res;
-                });
-                console.log(tokenAmountList);
-
-                setTokenIDs(tokenIDList);
-                setAmounts(tokenAmountList);
-
-                await tokenIDList.reduce(async (prevPromise, res, index) => {
-                    await prevPromise;
-
-                    const uri = await musicFactory.getTokenURI(res);
-                    var hex = uri.toString();
-                    var str = "";
-                    for (var n = 2; n < hex.length; n += 2) {
-                        str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
-                    }
-                    const gatewayUri = getGatewayAddress(str);
-                    const result = await axios.get(gatewayUri);
-                    const metadata = result.data;
-                    const image_url = getGatewayAddress(subIPFS(metadata.image));
-                    const music_url = getGatewayAddress(subIPFS(metadata.animation_url));
-
-                    // adds metadata
-                    setTitles(prevArr => [...prevArr, metadata.name]);
-                    setArtists(prevArr => [...prevArr, metadata.artist]);
-                    setGenre(prevArr => [...prevArr, metadata.genre]);
-                    setDescriptions(prevArr => [...prevArr, metadata.description]);
-                    setExternalURLs(prevArr => [...prevArr, metadata.external_url]);
-                    setImages(prevArr => [...prevArr, image_url]);
-                    setSongs(prevArr => [...prevArr, music_url]);
-                    setCreatorAddresses(prevArr => [...prevArr, metadata.creatorAddress]);
-
-                    if (index === 0) { // adds initial data
-                        setSelectedTokenID(tokenIDList[0]);
-                        setSelectedAmount(tokenAmountList[0]);
-                        setSelectedTitle(metadata.name);
-                        setSelectedArtist(metadata.artist);
-                        setSelectedGenre(metadata.genre);
-                        setSelectedDescription(metadata.description);
-                        setSelectedExternalURL(metadata.external_url);
-                        setSelectedImage(image_url);
-                        setSelectedSong(music_url);
-                        setSelectedCreatorAddress(metadata.creatorAddress);
-                    }
-                }, Promise.resolve());
+            const network = await provider.getNetwork();
+            if (network.chainId === 4) {
+                const listAccounts = await provider.listAccounts();
+                if (listAccounts.length) {
+                    const signer = await provider.getSigner();
+                    const musicFactory = new ethers.Contract(addresses.musicFactory, MusicFactory.abi, signer);
+                    const address = await signer.getAddress();
+                    const tokenLengthHex = await musicFactory.tokenId();
+                    const tokenLength = parseInt(tokenLengthHex._hex);
+                    const addressArray = Array(tokenLength).fill(address);
+                    const tokenArray = [...Array(tokenLength)].map((_, i) => i + 1);
+                    console.log("address Array : " + addressArray);
+                    console.log("token Array : " + tokenArray);
+    
+                    let tokenIDList = [];
+                    let tokenAmountList = [];
+                    
+                    (await musicFactory.balanceOfBatch(addressArray, tokenArray)).map((res, tokenID) => {
+                        res = parseInt(res._hex);
+                        if (res !== 0) {
+                            tokenIDList.push(tokenID + 1);
+                            tokenAmountList.push(res);
+                        }
+                        return res;
+                    });
+                    console.log(tokenAmountList);
+    
+                    setTokenIDs(tokenIDList);
+                    setAmounts(tokenAmountList);
+    
+                    await tokenIDList.reduce(async (prevPromise, res, index) => {
+                        await prevPromise;
+    
+                        const uri = await musicFactory.getTokenURI(res);
+                        var hex = uri.toString();
+                        var str = "";
+                        for (var n = 2; n < hex.length; n += 2) {
+                            str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+                        }
+                        const gatewayUri = getGatewayAddress(str);
+                        const result = await axios.get(gatewayUri);
+                        const metadata = result.data;
+                        const image_url = getGatewayAddress(subIPFS(metadata.image));
+                        const music_url = getGatewayAddress(subIPFS(metadata.animation_url));
+    
+                        // adds metadata
+                        setTitles(prevArr => [...prevArr, metadata.name]);
+                        setArtists(prevArr => [...prevArr, metadata.artist]);
+                        setGenre(prevArr => [...prevArr, metadata.genre]);
+                        setDescriptions(prevArr => [...prevArr, metadata.description]);
+                        setExternalURLs(prevArr => [...prevArr, metadata.external_url]);
+                        setImages(prevArr => [...prevArr, image_url]);
+                        setSongs(prevArr => [...prevArr, music_url]);
+                        setCreatorAddresses(prevArr => [...prevArr, metadata.creatorAddress]);
+    
+                        if (index === 0) { // adds initial data
+                            setSelectedTokenID(tokenIDList[0]);
+                            setSelectedAmount(tokenAmountList[0]);
+                            setSelectedTitle(metadata.name);
+                            setSelectedArtist(metadata.artist);
+                            setSelectedGenre(metadata.genre);
+                            setSelectedDescription(metadata.description);
+                            setSelectedExternalURL(metadata.external_url);
+                            setSelectedImage(image_url);
+                            setSelectedSong(music_url);
+                            setSelectedCreatorAddress(metadata.creatorAddress);
+                        }
+                    }, Promise.resolve());
+                }
             }
         }
 
@@ -184,14 +189,21 @@ function MyMusicList() {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = await provider.getSigner();
         const musicMarket = new ethers.Contract(addresses.musicMarket, MusicMarket.abi, signer);
-        const tx = await musicMarket.openTrade(SelectedCreatorAddress, SelectedTokenID, Price, 1);
+        const tx = await musicMarket.openTrade(SelectedCreatorAddress, SelectedTokenID, Price, AmountToSell);
         await tx.wait();
         window.alert("your NFT has been uploaded on tradeblock!");
         window.location.reload();
     }
 
     const putPrice = (e) => {
-        setPrice(e.target.value);
+        console.log(e.target.value)
+        if (e.target.value) {   
+            const price = ethers.utils.parseEther(e.target.value); // * 18
+            setPrice(price);
+        }
+        else {
+            setPrice(0);
+        }
     }
 
     const putAmountToSell = (e) => {
@@ -204,8 +216,8 @@ function MyMusicList() {
                 <div className="container">
                     <div className="musicDescription">
                         <div className="imgGrid">
-                            <img src={SelectedImage} alt={SelectedImage} width="200"></img>
-                            <div className="amount">Amount</div>
+                            <img src={SelectedImage} alt={SelectedImage} width="200"></img>{SelectedAmount}
+
                         </div>
                         <div className="firstRow">
                             <div>
@@ -220,7 +232,7 @@ function MyMusicList() {
                                 {SelectedTitle}
                             </div>
                             <div>
-                                <input className="priceInput" type="number" onChange={putPrice} placeholder="Set price"></input>
+                                <input className="priceInput" type="number" onChange={putPrice} min="0" placeholder="Set price"></input> BBB
                             </div>
                         </div>
                         <div className="secondRow">

@@ -3,11 +3,10 @@
     flex-direction: row;
     justify-content: space-between;
     width: 24vw;
-    /* background-color:green; */
-    /* left: 70px; */
     left: 31.5%;
     position: absolute;
     font-family: 'Roboto', sans-serif;
     font-size: 20px;
+    color: white;
 };
 
