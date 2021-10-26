@@ -24,6 +24,8 @@
 align-items: center;
 justify-content: center;
 flex-direction: column;
+position: relative;
+bottom: 15px;
 }
 
 .musicDescription {
@@ -202,6 +204,10 @@ flex-direction: column;
     grid-template-columns: 3fr 1fr 4fr 2fr;
 }
 
+.entry1:hover {
+    background-color: rgb(200, 200, 200);
+}
+
 
 .btn {
     position: relative;
@@ -245,23 +251,27 @@ section>div:last-child {
 }
 
 .amountInput {
-    color: rgb(0, 255, 85);
+    color: rgb(0, 0, 0);
     font-size: 1.3rem;
     border-radius: 24px;
     text-align: center;
+    position: relative;
+    top: 24px;
+    right: 67px;
+    background-color: #fff;
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: rgb(255, 157, 0);
+    color: rgb(0, 0, 0);
     opacity: 1; /* Firefox */
   }
 
   :-ms-input-placeholder { /* Internet Explorer 10-11 */
-    color:  rgb(255, 157, 0);
+    color:  rgb(0, 0, 0);
   }
 
   ::-ms-input-placeholder { /* Microsoft Edge */
-    color:  rgb(255, 157, 0);
+    color:  rgb(0, 0, 0);
   }
 
 
@@ -397,9 +407,9 @@ form input {
 
 .buy {
         position: relative;
-        /* bottom: -8px; */
-        /* left: 2px; */
-        top: 24px;
+        bottom: 15px;
+        left: 65px;
+        /* top: 24px; */
         /* margin-top: 38px; */
         width: 140px;
         height: 49.6px;
@@ -409,11 +419,17 @@ form input {
         /* opacity: 1; */
         color: rgb(0, 0, 0);
         font-size: 20px;
+        transition: background 0.7s ease-in-out;
 }
+
+.buy:hover {
+    background-color:#DC70DA;
+}
+
 
 .play {
     position: relative;
-    /* bottom: -8px; */
+    top: 14px;
     /* left: 2px; */
 
     /* margin-top: 38px; */
@@ -425,4 +441,17 @@ form input {
     /* opacity: 1; */
     color: rgb(0, 0, 0);
     font-size: 20px;
+    transition: background 0.7s ease-in-out;
+}
+
+.play:hover {
+    background-color:#DC70DA;
+}
+
+.loaderContainer {
+    display: flex;
+    width: 100%;
+    height: 300px;
+    align-items: center;
+    justify-content: center;
 }

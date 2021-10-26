@@ -164,7 +164,7 @@ function MintNFT() {
             <input type="file" ref={songInputRef} style={{ display: "none" }} onChange={UploadMusic} />
           </div>
         </div>
-        <div>
+        <div className={stylesMint.rightRow}>
           <div className={stylesMint.mintMetadata}>
             <form>
               <label className={stylesMint.label}>
@@ -197,10 +197,10 @@ function MintNFT() {
               </label>
               <input type="number" onChange={PutAmount}>
               </input>
-              <button className={stylesMint.mintButton} disabled={isMintButtonClicked} onClick={SubmitForm}>Mint NFT</button>
-            </form>
+              </form>
           </div>
-
+          <button className={stylesMint.mintButton} disabled={isMintButtonClicked} onClick={SubmitForm}>Mint NFT</button>
+            
         </div>
       </section>
     </article>

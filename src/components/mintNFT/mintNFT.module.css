@@ -1,6 +1,7 @@
 * {
-    --yo: #c7f0f5;
-    --button: #ff00d4;
+    --yo: #dfdfdf;
+    --button: #dfdfdf;
+    --hover: #ebb8fa;
 }
 
 .imageUpload {
@@ -14,7 +15,13 @@ border-radius: 52px;
 /* opacity: 0.65; */
 text-align: center;
 /* justify-content: center; */
+transition: background 0.7s ease-in-out;
 }
+
+.imageUpload:hover {
+    background-color: var(--hover);
+}
+
 
 .imageUpload > .adjust1 {
     position: relative;
@@ -26,16 +33,18 @@ text-align: center;
 
 
 .musicUpload {
-    margin-top: 30px;
-    top: 655px;
-left: 466px;
-width: 344px;
+margin-top: 30px;
 height: 140px;
 background: var(--yo) 0% 0% no-repeat padding-box;
 box-shadow: 2px 3px 6px #00000029;
 border-radius: 52px;
 /* opacity: 0.65; */
 text-align: center;
+transition: background 0.7s ease-in-out;
+}
+
+.musicUpload:hover {
+    background-color: var(--hover);
 }
 
 .musicUpload > .adjust2 {
@@ -46,7 +55,12 @@ text-align: center;
     margin-top: 5px;
 }
 
-
+.rightRow {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 .mintMetadata {
     top: 249px;
     left: 1023px;
@@ -55,8 +69,13 @@ text-align: center;
     background: var(--yo) 0% 0% no-repeat padding-box;
     box-shadow: 2px 3px 6px #00000029;
     border-radius: 52px;
+    transition: background 0.7s ease-in-out;
     /* opacity: 0.65; */
 }
+.mintMetadata:hover {
+    background-color: var(--hover);
+}
+
 .mintButton {
     margin-top: 33px;
     /* margin-left: 105px; */
@@ -66,8 +85,12 @@ text-align: center;
     box-shadow: 2px 3px 6px #00000029;
     border-radius: 52px;
     /* opacity: 1; */
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     font-size: 23px;
+    transition: background 0.7s ease-in-out;
+}
+.mintButton:hover {
+    background-color: #05F2DB;
 }
 
 section {

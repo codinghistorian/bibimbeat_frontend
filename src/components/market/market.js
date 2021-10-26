@@ -6,6 +6,7 @@ import addresses from '../../environment/ContractAddress.json';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import Loader from '../loader/loader';
 
 function Market() {
     const [Images, setImages] = useState([]);
@@ -333,7 +334,6 @@ function Market() {
     
                         <div className={stylesMarket.rightBox}>
                             <div className={stylesMarket.metaData}>
-    
                                 <div className={stylesMarket.itemPriceHeaders}>
                                     <div className={stylesMarket.item}>
                                         Item
@@ -359,7 +359,7 @@ function Market() {
                                     ))
                                 }
                             </div>
-                            <button className={stylesMarket.play}>Play</button>
+                            <div><button className={stylesMarket.play}>Play</button></div>
                         </div>
     
                         
@@ -370,7 +370,9 @@ function Market() {
     }
     else {
         return (
-            <div></div>
+            <div className={stylesMarket.loaderContainer}>
+                <Loader />
+            </div>
         )
     }
     

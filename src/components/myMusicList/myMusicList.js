@@ -7,6 +7,7 @@ import axios from 'axios';
 import stylesMyMusicList from './myMusicList.module.css';
 import { useDispatch } from 'react-redux';
 import { onChangeMusic } from './../../redux/modules/playButton';
+import Loader from '../loader/loader';
 
 function MyMusicList() {
     const dispatch = useDispatch();
@@ -308,7 +309,9 @@ function MyMusicList() {
     }
     else {
         return ( 
-        <div></div>
+            <div className={stylesMyMusicList.loaderContainer}>
+            <Loader />
+        </div>
         )
     }
     
