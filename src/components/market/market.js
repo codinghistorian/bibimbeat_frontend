@@ -1,4 +1,4 @@
-import "./market.css"
+import stylesMarket from "./market.module.css";
 import MusicMarket from '../../abi/MusicMarket.json';
 import MusicFactory from '../../abi/MusicFactory.json';
 import ERC20Minter from '../../abi/ERC20Minter.json';
@@ -233,14 +233,14 @@ function Market() {
     return (
         <article>
             <section>
-                <div className="container">
-                    <div className="musicDescription">
-                        <div className="imgGrid">
+                <div className={stylesMarket.container}>
+                    <div className={stylesMarket.musicDescription}>
+                        <div className={stylesMarket.imgGrid}>
                             <img src={SelectedImage} alt={SelectedImage} width="200"></img>
                             {SelectedAmount}
                         </div>
 
-                        <div className="firstRow">
+                        <div className={stylesMarket.firstRow}>
                             <div>
                                 Title
                             </div>
@@ -248,7 +248,7 @@ function Market() {
                                 Price
                             </div>
                         </div>
-                        <div className="firstRowInfo">
+                        <div className={stylesMarket.firstRowInfo}>
                             <div>
                                 {SelectedTitle}
                             </div>
@@ -257,7 +257,7 @@ function Market() {
                             </div>
                         </div>
 
-                        <div className="secondRow">
+                        <div className={stylesMarket.secondRow}>
                             <div>
                                 Artist
                             </div>
@@ -268,7 +268,7 @@ function Market() {
                                 ID
                             </div>
                         </div>
-                        <div className="secondRowInfo">
+                        <div className={stylesMarket.secondRowInfo}>
                             <div>
                                 {SelectedArtist}
                             </div>
@@ -280,21 +280,21 @@ function Market() {
                             </div>
                         </div>
 
-                        <div className="thirdRow">
+                        <div className={stylesMarket.thirdRow}>
                             Description
                         </div>
-                        <div className="thirdRowInfo">
+                        <div className={stylesMarket.thirdRowInfo}>
                             {SelectedDescription}
                         </div>
 
-                        <div className="fourthRow">
+                        <div className={stylesMarket.fourthRow}>
                             External URL
                         </div>
 
-                        <div className="fourthRowInfo">
+                        <div className={stylesMarket.fourthRowInfo}>
                             {SelectedExternalURL}
                         </div>
-                        <button className="buy" onClick={() => {
+                        <button className={stylesMarket.buy} onClick={() => {
                             if (BuyButtonText === "Buy")
                                 clickBuyButton();
                             else if (BuyButtonText === "Approve")
@@ -302,22 +302,22 @@ function Market() {
                             else if (BuyButtonText === "Purchase")
                                 clickPurchaseButton();
                         }}>{BuyButtonText}</button>
-                        <input className="amountInput" type="number" onChange={putAmountToSell} placeholder="Set amount to sell"></input>
+                        <input className={stylesMarket.amountInput} type="number" onChange={putAmountToSell} placeholder="Set amount to sell"></input>
                     </div>
                     <div>
-                        <div className="metaData">
+                        <div className={stylesMarket.metaData}>
 
-                            <div className="itemPriceHeaders">
-                                <div className="item">
+                            <div className={stylesMarket.itemPriceHeaders}>
+                                <div className={stylesMarket.item}>
                                     Item
                                 </div>
-                                <div className="price">
+                                <div className={stylesMarket.price}>
                                     Price
                                 </div>
                             </div>
                             {
                                 [...Array(OpenTradeCounters.length)].map((n, index) => (
-                                    <div key={index} className="entry1" onClick={() => putSongInfo(index)}>
+                                    <div key={index} className={stylesMarket.entry1} onClick={() => putSongInfo(index)}>
                                         <div>
                                             <p>{Artists8bytes[index]}</p>
                                         </div>
@@ -332,7 +332,7 @@ function Market() {
                                 ))
                             }
                         </div>
-                        <div className="scrollbar">
+                        <div className={stylesMarket.scrollbar}>
                         </div>
                     </div>
                 </div>

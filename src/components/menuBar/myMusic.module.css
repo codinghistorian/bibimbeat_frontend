@@ -9,8 +9,8 @@
     height: 30px;
     position: relative;
     top: 68px;
-    left: -12px;
-    color: #000000;
+    /* left: -12px; */
+    color: #ffffff;
     box-shadow: 0px 3px 6px #07030329;
 }
 #img{
@@ -23,6 +23,3 @@
     bottom: 67px;
     color: #ffffff;
 }
-
-
-
