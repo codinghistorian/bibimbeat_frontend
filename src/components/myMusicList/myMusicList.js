@@ -232,7 +232,7 @@ function MyMusicList() {
                                 {SelectedTitle}
                             </div>
                             <div>
-                                <input className={stylesMyMusicList.priceInput} type="number" onChange={putPrice} min="0" placeholder="Set price"></input> BBB
+                                <input className={stylesMyMusicList.priceInput} type="number" min="0" onChange={putPrice} min="0" placeholder="Set price"></input> BBB
                             </div>
                         </div>
                         <div className={stylesMyMusicList.secondRow}>

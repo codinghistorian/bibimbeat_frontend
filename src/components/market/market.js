@@ -234,6 +234,7 @@ function Market() {
         <article>
             <section>
                 <div className={stylesMarket.container}>
+                    <div className={stylesMarket.leftBox}>
                     <div className={stylesMarket.musicDescription}>
                         <div className={stylesMarket.imgGrid}>
                             <img src={SelectedImage} alt={SelectedImage} width="200"></img>
@@ -294,6 +295,12 @@ function Market() {
                         <div className={stylesMarket.fourthRowInfo}>
                             {SelectedExternalURL}
                         </div>
+                       
+                    </div>
+                    <div>
+                        <input className={stylesMarket.amountInput} type="number" min="0" onChange={putAmountToSell} placeholder="Amount"></input>
+                    </div>
+                    <div>
                         <button className={stylesMarket.buy} onClick={() => {
                             if (BuyButtonText === "Buy")
                                 clickBuyButton();
@@ -302,9 +309,11 @@ function Market() {
                             else if (BuyButtonText === "Purchase")
                                 clickPurchaseButton();
                         }}>{BuyButtonText}</button>
-                        <input className={stylesMarket.amountInput} type="number" onChange={putAmountToSell} placeholder="Set amount to sell"></input>
+                        
                     </div>
-                    <div>
+                    </div>
+
+                    <div className={stylesMarket.rightBox}>
                         <div className={stylesMarket.metaData}>
 
                             <div className={stylesMarket.itemPriceHeaders}>
@@ -332,9 +341,10 @@ function Market() {
                                 ))
                             }
                         </div>
-                        <div className={stylesMarket.scrollbar}>
-                        </div>
+                        <button className={stylesMarket.play}>Play</button>
                     </div>
+
+                    
                 </div>
             </section>
         </article >
