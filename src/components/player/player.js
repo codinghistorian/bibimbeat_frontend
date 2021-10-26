@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styles from "./audioPlayer.module.css"
 import { FaStepForward, FaStepBackward, FaRegPlayCircle, FaRegPauseCircle, FaRandom, FaVolumeUp } from "react-icons/fa"
-import { ImLoop } from "react-icons/im"
+import { ImLoop } from "react-icons/im";
 import { MdPlaylistPlay } from "react-icons/md"
 import { useSelector } from 'react-redux';
 

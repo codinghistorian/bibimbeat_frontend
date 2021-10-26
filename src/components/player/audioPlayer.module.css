@@ -1,8 +1,8 @@
 .audioPlayer {
-    --primary: #efaffa;
-    --secondary: #faefbe;
+    --primary: #4400ff;
+    --secondary: #f700ff;
     padding: 0.4em; 
-    background: #EFE4BD 0% 0% no-repeat padding-box;
+    background: #04C4D9 0% 0% no-repeat padding-box;
     box-shadow: 0px 3px 6px #07030329;
     border-radius: 15px;
     opacity: 1;
@@ -30,7 +30,7 @@
 }
 
 .playPause {
-    background: #EFE4BD;
+    background: #04C4D9;
     border: #000000;
     font-size: 1.2em;
     color: var(--bar-bg);
