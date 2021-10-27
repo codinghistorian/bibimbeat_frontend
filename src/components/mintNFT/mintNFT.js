@@ -185,8 +185,9 @@ function MintNFT() {
               <label className={stylesMint.label}>
                 Description
               </label>
-              <input type="text" className={stylesMint.description} onChange={PutDescription}>
-              </input>
+              {/* <input type="text" className={stylesMint.description} onChange={PutDescription}> */}
+              <textarea className={stylesMint.description} onChange={PutDescription}></textarea>
+              {/* </input> */}
               <label className="label">
                 External URL
               </label>

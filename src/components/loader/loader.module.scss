@@ -1,7 +1,8 @@
 .flexContainer {
     display: flex;
     flex-direction: row;
-    width: 40%;
+    // resize elements spacing
+    width: 20%;
     justify-content: space-around;
     // align-items: center;
 }
