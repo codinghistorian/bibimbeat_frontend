@@ -193,7 +193,7 @@
 }
 
 .bbb {
-    position: absolute;
+    display:none;
     bottom: 8px;
     left: 220px;
     color: #240246;
