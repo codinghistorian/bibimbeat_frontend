@@ -37,7 +37,7 @@ justify-content: center;
 }
 
 .forwardBackward:hover {
-    color: var(--primary)
+    color: var(--primary);
 }
 
 .playPause {
@@ -48,8 +48,12 @@ justify-content: center;
     display: flex;
     justify-content: center;
     align-items: center;
-
 }
+
+.playPause:hover {
+    color: var(--primary);
+}
+
 
 .currentTime,
 .duration {

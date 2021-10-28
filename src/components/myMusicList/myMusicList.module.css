@@ -1,3 +1,10 @@
+* {
+    --yo: #dfdfdf;
+    --button: #dfdfdf;
+    --hover: #ebb8fa;
+    --hover2: #efcbfa;
+}
+
 .container {
     display: flex;
     flex-direction: row;
@@ -12,6 +19,17 @@
     margin-left: 20px;
 }
 
+.leftBox {
+    display: flex;
+    align-items: center;
+    flex-direction: column;   
+}
+.rightBox {
+    display: flex;
+    align-items: center;
+    flex-direction: column;  
+}
+
 
 .musicDescription {
     top: 249px;
@@ -20,7 +38,7 @@
     height: 398.4px;
     padding-left: auto;
     padding-top: 20px;
-    background: #FEF9F9 0% 0% no-repeat padding-box;
+    background:var(--yo) 0% 0% no-repeat padding-box;
     box-shadow: 2px 3px 6px #00000029;
     border-radius: 52px;
     /* opacity: 0.65; */
@@ -132,38 +150,79 @@
 
 .sell {
     position: relative;
-    left: 56px;
-    bottom: 20px;
-
-    margin-top: 38px;
+    top: 20px;
+    left: 180px;
     /* margin-left: 105px; */
     width: 140px;
     height: 49.6px;
-    background: #944949 0% 0% no-repeat padding-box;
+    background: var(--yo) 0% 0% no-repeat padding-box;
     box-shadow: 2px 3px 6px #00000029;
     border-radius: 52px;
     /* opacity: 1; */
-    color: white;
+    color: rgb(0, 0, 0);
     font-size: 20px;
+    transition: background 0.7s ease-in-out;
+}
+
+.sell:hover {
+    background-color:#d3fdf9;
 }
 
 .amountInput {
+    color: rgb(0, 0, 0);
+    font-size: 1rem;
+    border-radius: 24px;
+    text-align: left;
     position: relative;
-    right: 110px;
-    bottom: 53px;
-    font-size: 20px;
+    top: 42px;
+    right: 190px;
+    background-color: #fff;
+}
+
+.priceInput {
+    color: rgb(0, 0, 0);
+    font-size: 1rem;
+    border-radius: 24px;
+    text-align: left;
+    position: relative;
+    width: 1000px;
+    top: 16px;
+    right: 82px;
+    /* bottom: 30px; */
+    background-color: #fff;
+}
+
+.bbb {
+    position: absolute;
+    bottom: 8px;
+    left: 220px;
+    color: #240246;
 }
 
 .MTs {
     position: relative;
     top: 50%;
+
 }
 
 
-#play {
-	position: relative;
-	left: 385px;
-	top: -104px;
+.play {
+    position: relative;
+    /* margin-left: 105px; */
+    top: 20px;
+    width: 140px;
+    height: 49.6px;
+    background: var(--yo) 0% 0% no-repeat padding-box;
+    box-shadow: 2px 3px 6px #00000029;
+    border-radius: 52px;
+    /* opacity: 1; */
+    color: rgb(0, 0, 0);
+    font-size: 20px;
+    transition: background 0.7s ease-in-out;
+}
+
+.play:hover {
+    background-color:var(--hover2);
 }
 
 

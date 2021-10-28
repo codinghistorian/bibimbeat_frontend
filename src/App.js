@@ -6,6 +6,7 @@ import MyMusicList from './components/myMusicList/myMusicList';
 import MintNFT from './components/mintNFT/mintNFT';
 import Market from './components/market/market';
 import { Route, Link } from 'react-router-dom';
+import WalletNotConnected from './components/walletNotConnected/walletNotConnected';
 // import Video from './components/video/video';
 // import { useState } from 'react';
 
