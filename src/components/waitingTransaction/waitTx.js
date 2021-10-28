@@ -1,4 +1,5 @@
 import stylesWaitTx from "./waitTx.module.scss";
+// import logo from '../images/logo.png';
 
 function WaitTx() {
 
@@ -7,7 +8,8 @@ function WaitTx() {
         <div className={stylesWaitTx.flexContainer}>
             <div className={stylesWaitTx.loader}>
                 <svg viewBox="0 0 80 80">
-                    <circle id={stylesWaitTx.test} cx="40" cy="40" r="32"></circle>
+                    {/* <img src={logo}></img> */}
+                    {/* <circle id={stylesWaitTx.test} cx="40" cy="40" r="32"></circle> */}
                 </svg>
             </div>
             {/* <div className={`${stylesLoader.loader} ${stylesLoader.triangle}`}>
