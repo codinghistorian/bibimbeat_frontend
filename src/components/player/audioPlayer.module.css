@@ -13,6 +13,7 @@
 }
 .centerer {
     width: 100vw;
+    height: 55px;
     background-color:  #d4d4d4;
     display: flex;
     align-items: center;
@@ -186,8 +187,11 @@ justify-content: center;
 
 .artistInfo {
     font-size: 0.7em;
+    position: absolute;
+    bottom: 30px;
 }
 
 .titleInfo {
     font-size: 0.7em;
+    position: absolute;
 }
