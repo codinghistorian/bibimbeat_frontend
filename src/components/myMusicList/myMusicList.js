@@ -231,9 +231,9 @@ function MyMusicList() {
                                 <div>
                                     Title
                                 </div>
-                                <div>
+                                {/* <div>
                                     Price
-                                </div>
+                                </div> */}
                             </div>
                             <div className={stylesMyMusicList.firstRowInfo}>
                                 <div>
@@ -296,7 +296,8 @@ function MyMusicList() {
                                     {
                                         TokenIDs.map((res, index) => (
                                             <div key={index}>
-                                                <button style={{ marginBottom: "10px" }} onClick={() => putSongInfo(index)}>{Artists[index]} - {Titles[index]}</button>
+                                                <button  className={stylesMyMusicList.entryMine} style={{ marginBottom: "10px" }} onClick={() => putSongInfo(index)}>
+                                                  <div>{Artists[index]}</div> <div><p>-</p></div> <div><p>{Titles[index]}</p></div></button>
                                             </div>
                                         ))
                                     }

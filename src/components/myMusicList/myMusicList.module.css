@@ -47,6 +47,13 @@
     text-align: center;
     font-family: 'Kaushan Script', cursive;
 }
+.imgGrid {
+    width: 200px;
+    height: 200px;
+    /* background-color: white; */
+    margin: 0 auto;
+}
+
 
 .firstRow {
     padding-left: 1em;
@@ -232,4 +239,25 @@
     height: 300px;
     align-items: center;
     justify-content: center;
+}
+
+.entryMine {
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 3fr 1fr 4fr 2fr;
+    background-color: rgb(224, 222, 222);
+    border-radius: 40px;
+    width: 100%;
+    align-items: center;
+    border:none;
+}
+
+.entryMine:hover {
+    background-color: rgb(200, 200, 200);
+    border-radius: 40px;
+}
+
+.entryMine:focus-within{
+    background-color: rgb(200, 200, 200);
+    border-radius: 40px;
 }
