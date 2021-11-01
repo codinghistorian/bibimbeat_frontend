@@ -54,7 +54,7 @@ const clickMenuButton = () => {
                 <div className={stylesDotMenu.discord}><a href="https://discord.gg/VHCbKTN7" target="_blank"><img src={discord}></img></a></div>
                 <div className={stylesDotMenu.twitter}><a href="https://twitter.com/bibimbeat" target="_blank"><img  src={twitter}></img></a></div>
                 <div className={stylesDotMenu.github}><a href="https://github.com/bibimbeat" target="_blank"><img src={github}></img></a></div>
-                <div className={stylesDotMenu.docs}><a href="" target="_blank"><img src={docs}></img></a></div>
+                <div className={stylesDotMenu.docs}><a href="https://bibimbeat.gitbook.io/bibimbeat/" target="_blank"><img src={docs}></img></a></div>
             </div>
         </div>
         // onclick="window.open('https://twitter.com/bibimbeat')"

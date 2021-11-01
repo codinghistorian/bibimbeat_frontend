@@ -292,6 +292,7 @@ function MyMusicList() {
                     </div>
                     <div className={stylesMyMusicList.rightBox}>
                             <div className={stylesMyMusicList.musicDescription}>
+                                Your NFTs
                                 <div className={stylesMyMusicList.MTs}>
                                     {
                                         TokenIDs.map((res, index) => (

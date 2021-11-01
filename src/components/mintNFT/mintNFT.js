@@ -202,8 +202,8 @@ function MintNFT() {
               </form>
           </div>
           <button className={stylesMint.mintButton} disabled={isMintButtonClicked} onClick={SubmitForm}>
-            {/* Mint NFT */}
-          <WaitTx />
+            Mint NFT
+          {/* <WaitTx /> */}
           </button>
             
         </div>
