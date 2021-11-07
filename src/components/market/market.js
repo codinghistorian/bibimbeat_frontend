@@ -92,7 +92,7 @@ function Market() {
             initializeStates();
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const network = await provider.getNetwork();
-            if (network.chainId === 4) {
+            if (network.chainId === 666) {
                 const musicMarket = new ethers.Contract(addresses.musicMarket, MusicMarket.abi, provider);
                 const tradeCounterHex = await musicMarket.tradeCounter();
                 const tradeCounter = parseInt(Number(tradeCounterHex._hex), 10);

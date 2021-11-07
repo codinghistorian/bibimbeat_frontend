@@ -82,7 +82,7 @@ function MyMusicList() {
             initializeStates();
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const network = await provider.getNetwork();
-            if (network.chainId === 4) {
+            if (network.chainId === 666) {
                 const listAccounts = await provider.listAccounts();
                 if (listAccounts.length) {
                     const signer = await provider.getSigner();

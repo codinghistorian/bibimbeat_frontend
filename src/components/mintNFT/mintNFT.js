@@ -71,8 +71,8 @@ function MintNFT() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const network = await provider.getNetwork();
 
-    if (network.chainId !== 4) {
-      alert("Please change your network to rinkeby testnet!");
+    if (network.chainId !== 666) {
+      alert("Please change your network to Metis testnet!");
       setIsMintButtonClicked(false);
     }
     else {

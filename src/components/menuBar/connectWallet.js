@@ -20,11 +20,11 @@ function ConnectWallet() {
             console.log("hi4");
             const network = await provider.getNetwork();
             console.log(network.chainId);
-            if (network.chainId !== 4) {
+            if (network.chainId !== 666) {
                 setButtonText("Wrong Network");
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: '0x4' }], // chainId must be in hexadecimal numbers
+                    params: [{ chainId: '0x29A' }], // chainId must be in hexadecimal numbers
                   });
             }
             else {
@@ -38,7 +38,7 @@ function ConnectWallet() {
         const reload = async () => {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             if (await window.ethereum._metamask.isUnlocked()) {
-                if ((await provider.getNetwork()).chainId !== 4) {
+                if ((await provider.getNetwork()).chainId !== 666) {
                     setButtonText("Wrong Network");
                 }
                 else {
@@ -50,7 +50,7 @@ function ConnectWallet() {
         }
         window.ethereum.on('chainChanged', async (chainId) => {
             // console.log("chainID: " + chainId);
-            if (chainId !== "0x4") {
+            if (chainId !== '0x29A') {
                 setButtonText("Wrong Network");
             }
             else {
