@@ -92,7 +92,7 @@ function Market() {
             initializeStates();
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const network = await provider.getNetwork();
-            if (network.chainId === 666) {
+            if (network.chainId === 80001) {
                 const musicMarket = new ethers.Contract(addresses.musicMarket, MusicMarket.abi, provider);
                 const tradeCounterHex = await musicMarket.tradeCounter();
                 const tradeCounter = parseInt(Number(tradeCounterHex._hex), 10);
@@ -254,86 +254,86 @@ function Market() {
                 <section>
                     <div className={stylesMarket.container}>
                         <div className={stylesMarket.leftBox}>
-                        <div className={stylesMarket.musicDescription}>
-                        Sales Amount : {SelectedAmount}
-                            <div className={stylesMarket.imgGrid}>
-                            
-                                <img src={SelectedImage} alt={SelectedImage} width="200"></img>
-                                
+                            <div className={stylesMarket.musicDescription}>
+                                Sales Amount : {SelectedAmount}
+                                <div className={stylesMarket.imgGrid}>
+
+                                    <img src={SelectedImage} alt={SelectedImage} width="200"></img>
+
+                                </div>
+
+                                <div className={stylesMarket.firstRow}>
+                                    <div>
+                                        Title
+                                    </div>
+                                    <div>
+                                        Price
+                                    </div>
+                                </div>
+                                <div className={stylesMarket.firstRowInfo}>
+                                    <div>
+                                        {SelectedTitle}
+                                    </div>
+                                    <div>
+                                        {SelectedPrice} BBB
+                                    </div>
+                                </div>
+
+                                <div className={stylesMarket.secondRow}>
+                                    <div>
+                                        Artist
+                                    </div>
+                                    <div>
+                                        Genre
+                                    </div>
+                                    <div>
+                                        ID
+                                    </div>
+                                </div>
+                                <div className={stylesMarket.secondRowInfo}>
+                                    <div>
+                                        {SelectedArtist}
+                                    </div>
+                                    <div>
+                                        {SelectedGenre}
+                                    </div>
+                                    <div>
+                                        {SelectedTokenID}
+                                    </div>
+                                </div>
+
+                                <div className={stylesMarket.thirdRow}>
+                                    Description
+                                </div>
+                                <div className={stylesMarket.thirdRowInfo}>
+                                    {SelectedDescription}
+                                </div>
+
+                                <div className={stylesMarket.fourthRow}>
+                                    External URL
+                                </div>
+
+                                <div className={stylesMarket.fourthRowInfo}>
+                                    {SelectedExternalURL}
+                                </div>
+
                             </div>
-    
-                            <div className={stylesMarket.firstRow}>
-                                <div>
-                                    Title
-                                </div>
-                                <div>
-                                    Price
-                                </div>
+                            <div>
+                                <input className={stylesMarket.amountInput} type="number" min="0" onChange={putAmountToSell} placeholder="Amount"></input>
                             </div>
-                            <div className={stylesMarket.firstRowInfo}>
-                                <div>
-                                    {SelectedTitle}
-                                </div>
-                                <div>
-                                    {SelectedPrice} BBB
-                                </div>
+                            <div>
+                                <button className={stylesMarket.buy} onClick={() => {
+                                    if (BuyButtonText === "Buy")
+                                        clickBuyButton();
+                                    else if (BuyButtonText === "Approve")
+                                        clickApproveButton();
+                                    else if (BuyButtonText === "Purchase")
+                                        clickPurchaseButton();
+                                }}>{BuyButtonText}</button>
+
                             </div>
-    
-                            <div className={stylesMarket.secondRow}>
-                                <div>
-                                    Artist
-                                </div>
-                                <div>
-                                    Genre
-                                </div>
-                                <div>
-                                    ID
-                                </div>
-                            </div>
-                            <div className={stylesMarket.secondRowInfo}>
-                                <div>
-                                    {SelectedArtist}
-                                </div>
-                                <div>
-                                    {SelectedGenre}
-                                </div>
-                                <div>
-                                    {SelectedTokenID}
-                                </div>
-                            </div>
-    
-                            <div className={stylesMarket.thirdRow}>
-                                Description
-                            </div>
-                            <div className={stylesMarket.thirdRowInfo}>
-                                {SelectedDescription}
-                            </div>
-    
-                            <div className={stylesMarket.fourthRow}>
-                                External URL
-                            </div>
-    
-                            <div className={stylesMarket.fourthRowInfo}>
-                                {SelectedExternalURL}
-                            </div>
-                           
                         </div>
-                        <div>
-                            <input className={stylesMarket.amountInput} type="number" min="0" onChange={putAmountToSell} placeholder="Amount"></input>
-                        </div>
-                        <div>
-                            <button className={stylesMarket.buy} onClick={() => {
-                                if (BuyButtonText === "Buy")
-                                    clickBuyButton();
-                                else if (BuyButtonText === "Approve")
-                                    clickApproveButton();
-                                else if (BuyButtonText === "Purchase")
-                                    clickPurchaseButton();
-                            }}>{BuyButtonText}</button>
-                            
-                        </div>
-                        </div>
-    
+
                         <div className={stylesMarket.rightBox}>
                             <div className={stylesMarket.metaData}>
                                 <div className={stylesMarket.itemPriceHeaders}>
@@ -344,9 +344,10 @@ function Market() {
                                         Price
                                     </div>
                                 </div>
+                                <div className={stylesMarket.scrollbar}>
                                 {
                                     [...Array(OpenTradeCounters.length)].map((n, index) => (
-                                        <div tabindex={index} key={index} className={stylesMarket.entry1} onClick={() => putSongInfo(index)}>
+                                        <div tabIndex={index} key={index} className={stylesMarket.entry1} onClick={() => putSongInfo(index)}>
                                             <div>
                                                 <p>{Artists8bytes[index]}</p>
                                             </div>
@@ -360,11 +361,11 @@ function Market() {
                                         </div>
                                     ))
                                 }
+                                </div>
+                                
                             </div>
                             <div><button className={stylesMarket.play}>Play</button></div>
                         </div>
-    
-                        
                     </div>
                 </section>
             </article >
@@ -377,7 +378,7 @@ function Market() {
             </div>
         )
     }
-    
+
 }
 
 export default Market;

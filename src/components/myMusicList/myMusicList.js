@@ -82,7 +82,7 @@ function MyMusicList() {
             initializeStates();
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const network = await provider.getNetwork();
-            if (network.chainId === 666) {
+            if (network.chainId === 80001) {
                 const listAccounts = await provider.listAccounts();
                 if (listAccounts.length) {
                     const signer = await provider.getSigner();
@@ -172,7 +172,7 @@ function MyMusicList() {
 
     const clickApproveButton = async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = await provider.getSigner();
+        const signer = provider.getSigner();
         const musicFactory = new ethers.Contract(addresses.musicFactory, MusicFactory.abi, signer);
         const account = await signer.getAddress();
         if (!(await musicFactory.isApprovedForAll(account, addresses.musicMarket))) {
@@ -186,7 +186,7 @@ function MyMusicList() {
 
     const clickAddOnTradeblock = async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = await provider.getSigner();
+        const signer = provider.getSigner();
         const musicMarket = new ethers.Contract(addresses.musicMarket, MusicMarket.abi, signer);
         const tx = await musicMarket.openTrade(SelectedCreatorAddress, SelectedTokenID, Price, AmountToSell);
         await tx.wait();
@@ -213,8 +213,29 @@ function MyMusicList() {
         else {
             setAmountToSell(e.target.value);
         }
-        
     }
+
+    const airdropNFT = async () => {
+        if (SelectedTokenID != 1)
+            window.alert("selected NFT is not token ID 8! please try again.");
+        else {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            const musicFactory = new ethers.Contract(addresses.musicFactory, MusicFactory.abi, signer);
+            let amounts = [];
+            let recipients = [];
+            
+            for (var i = 0; i < 2016; i++) {
+                amounts.push(1);
+                recipients.push("0x1B2828a7cEE71ff1a706F0CD24eFdf0b6aC21F8B");
+            }
+            const tx = await musicFactory.airdrop(SelectedTokenID, amounts, recipients);
+            await tx.wait();
+            window.alert("Bibimbeat NFT has been aidropped. check your NFT!");
+            window.location.reload();
+        }
+    }
+
     if (IsDataRead) {
         return (
             <article>
@@ -292,20 +313,23 @@ function MyMusicList() {
                     </div>
                     <div className={stylesMyMusicList.rightBox}>
                             <div className={stylesMyMusicList.musicDescription}>
-                                Your NFTs
-                                <div className={stylesMyMusicList.MTs}>
-                                    {
-                                        TokenIDs.map((res, index) => (
-                                            <div key={index}>
-                                                <button  className={stylesMyMusicList.entryMine} style={{ marginBottom: "10px" }} onClick={() => putSongInfo(index)}>
-                                                  <div>{Artists[index]}</div> <div><p>-</p></div> <div><p>{Titles[index]}</p></div></button>
-                                            </div>
-                                        ))
-                                    }
+                            Your NFTs
+                                <div className={stylesMyMusicList.scrollbar}>
+                                    <div className={stylesMyMusicList.MTs}>
+                                        {
+                                            TokenIDs.map((res, index) => (
+                                                <div key={index}>
+                                                    <button  className={stylesMyMusicList.entryMine} style={{ marginBottom: "10px" }} onClick={() => putSongInfo(index)}>
+                                                    <div>{Artists[index]}</div> <div><p>-</p></div> <div><p>{Titles[index]}</p></div></button>
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
                                 </div>
                             </div>
                             <div>
                                  <button className={stylesMyMusicList.sell} className={stylesMyMusicList.play} onClick={clickPlayButton}>Play</button>
+                                 {/* <button onClick={airdropNFT}>Airdrop</button> */}
                             </div>
                     </div>
                         

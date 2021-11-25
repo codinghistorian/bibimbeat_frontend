@@ -27,11 +27,11 @@
 .rightBox {
     margin-left: 20px;
     display: flex;
-align-items: center;
-justify-content: center;
-flex-direction: column;
-position: relative;
-bottom: 15px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    bottom: 15px;
 }
 
 .musicDescription {
@@ -136,16 +136,21 @@ bottom: 15px;
     font-family: 'Inconsolata', sans-serif;
     font-size: smaller;
     display: grid;
-    overflow: hidden;
-    overflow-y: scroll;
-    scrollbar-width: small;
-    scrollbar-base-color: white;
-    scrollbar-color: #e78e8e, pink;
 }
 
 .scrollbar {
-    overflow: auto;
-    overflow-y: scroll;
+    /* position: relative; */
+    padding-left: 10px;
+    top: 249px;
+    left: 1400px;
+    width: 325px;
+    height: 320px;
+    overflow-y: auto;
+}
+.scrollbar::-webkit-scrollbar {
+    position: relative;
+    width: 12px;
+    border-radius: 10px;
 }
 
 
@@ -207,7 +212,7 @@ bottom: 15px;
 .entry1 {
     cursor: pointer;
     display: grid;
-    grid-template-columns: 3fr 1fr 4fr 2fr;
+    grid-template-columns: 2fr 1fr 4fr 2fr;
 }
 
 .entry1:hover {
